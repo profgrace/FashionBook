@@ -138,6 +138,7 @@ export default {
 .submit-btn {
   border-radius: unset;
   box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1) !important;
+  font-weight: 500;
   width: 150px;
 }
 </style>

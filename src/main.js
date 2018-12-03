@@ -11,6 +11,7 @@ Vue.config.productionTip = false;
 Vue.use(Vuetify, {
   theme: {
     primary: "#D30069",
+    secondary: "#077786",
     btnColor: "#DAC416",
     offWhite: "#fcfffa"
   }

@@ -1,3 +1,11 @@
+* {
+  font-family: "Raleway", sans-serif;
+  font-weight: 300;
+}
+
+// Variables
+$fw-4: 400;
+
 img {
   max-width: 100%;
 }
@@ -11,10 +19,34 @@ img {
   text-align: center;
 }
 
+// Toolbar
+.logo {
+  span {
+    font-family: "Pacifico", cursive;
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+}
+
 // Latest Collections section
 // .main-pic {
 //   padding: 30px;
 // }
+
+// Call to Action
+.cta {
+  p {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  span {
+    font-size: 16px;
+    font-weight: 700;
+    a {
+      font-weight: 600;
+    }
+  }
+}
 
 // Footer
 footer {

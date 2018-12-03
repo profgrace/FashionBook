@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-toolbar class="white" app>
-      <v-toolbar-title class="headline text-uppercase">
+      <v-toolbar-title class="logo primary--text">
         <span>FashionBook</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
