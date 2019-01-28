@@ -1,13 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar class="white" app>
-      <v-toolbar-title class="logo primary--text">
-        <span>FashionBook</span>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-icon>menu</v-icon>
-    </v-toolbar>
-
+    <tool-bar></tool-bar>
     <v-content>
       <router-view></router-view>
     </v-content>
@@ -15,9 +8,12 @@
 </template>
 
 <script>
+import ToolBar from "./components/ToolBar.vue";
 export default {
   name: "App",
-  components: {},
+  components: {
+    ToolBar
+  },
   data() {
     return {
       //
@@ -26,5 +22,5 @@ export default {
 };
 </script>
 <style lang="scss">
-@import "./scss/style.scss";
+@import "App.scss";
 </style>
