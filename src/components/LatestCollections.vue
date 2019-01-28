@@ -1,8 +1,9 @@
 <template>
-  <div>
-    <h2 class="title mt-5 mb-3">Latest Collections</h2>
-    <v-layout row wrap>
-      <v-flex xs12 sm6 mb-4 v-for="(item,i) in products" :key="i">
+    <v-layout row wrap mt-5>
+      <v-flex xs12>
+        <span class="title mb-3">Latest Collections</span>
+      </v-flex>
+      <v-flex sm6 xs12 mb-4 v-for="(item,i) in products" :key="i">
         <v-card flat tile class="collection">
           <v-layout row wrap class="pictures">
             <v-flex xs9 class="main-pic">
@@ -27,10 +28,9 @@
         </v-card>
       </v-flex>
       <v-flex xs12 text-xs-center mt-3>
-        <v-btn color="btnColor" class="submit-btn">More</v-btn>
+        <v-btn color="btncolor" class="submit-btn">More</v-btn>
       </v-flex>
     </v-layout>
-  </div>
 </template>
 <script>
 export default {
@@ -96,7 +96,11 @@ export default {
 <style lang="scss">
 .title {
   border-bottom: 0.5px solid rgba(0, 0, 0, 0.8);
+  display: inline-block;
+  font-size: 20px !important;
+  font-weight: 500;
   padding-bottom: 5px;
+  width: 100%;
 }
 .collection {
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
@@ -106,6 +110,9 @@ export default {
   .main-pic {
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     padding: 30px !important;
+    img {
+      max-width: 100%;
+    }
   }
   .other-pics {
     & > div {

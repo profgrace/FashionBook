@@ -1,3 +1,3 @@
 <template>
-  <div class="ad">Some Google Ad</div>
+  <div class="ad mt-5">Some Google Ad</div>
 </template>

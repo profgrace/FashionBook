@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <HomeSlider/>
-    <Search/>
     <v-container grid-list-xs>
+      <Search/>
       <Ad/>
       <Latest/>
       <CTA/>
