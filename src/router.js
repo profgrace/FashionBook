@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import PostAd from "./views/PostAd.vue";
+import GetStarted from "./views/GetStarted.vue";
 
 Vue.use(Router);
 
@@ -11,6 +12,11 @@ export default new Router({
       path: "/postad",
       name: "postad",
       component: PostAd
+    },
+    {
+      path: "/getstarted",
+      name: "getstarted",
+      component: GetStarted
     }
   ]
 });

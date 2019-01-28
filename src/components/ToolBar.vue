@@ -5,9 +5,9 @@
     </v-toolbar-title>
     <v-spacer></v-spacer>
     <v-toolbar-items>
-      <v-btn flat class="flat-button">
+      <v-btn flat class="flat-button" to="/getstarted">
         <span>Hey there,</span>
-        <a class="ml-1">Sign in</a>
+        <i class="ml-1">get started</i>
       </v-btn>
       <v-btn color="secondary" class="secondary-button" to="postad">Post New Ad</v-btn>
     </v-toolbar-items>
@@ -28,9 +28,10 @@
   span {
     font-family: "Nanum Brush Script", cursive;
   }
-  a {
+  i {
     color: black;
     font-size: 16px;
+    font-weight: 600;
     text-decoration: underline;
   }
 }
