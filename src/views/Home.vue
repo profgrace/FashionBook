@@ -17,7 +17,6 @@ import Search from "../components/Search";
 import Ad from "../components/Ad";
 import Latest from "../components/LatestCollections";
 import CTA from "../components/CallToAction";
-import Footer from "../components/Footer";
 
 export default {
   components: {
@@ -25,8 +24,7 @@ export default {
     Search,
     Ad,
     Latest,
-    CTA,
-    Footer
+    CTA
   }
 };
 </script>

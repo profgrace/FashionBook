@@ -4,15 +4,18 @@
     <v-content>
       <router-view></router-view>
     </v-content>
+    <Footer/>
   </v-app>
 </template>
 
 <script>
 import ToolBar from "./components/ToolBar.vue";
+import Footer from "./components/Footer.vue";
 export default {
   name: "App",
   components: {
-    ToolBar
+    ToolBar,
+    Footer
   },
   data() {
     return {

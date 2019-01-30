@@ -1,36 +1,40 @@
 <template>
-    <v-layout row wrap mt-5>
-      <v-flex xs12>
-        <span class="title mb-3">Latest Collections</span>
-      </v-flex>
-      <v-flex sm6 xs12 mb-4 v-for="(item,i) in products" :key="i">
-        <v-card flat tile class="collection">
-          <v-layout row wrap class="pictures">
-            <v-flex xs9 class="main-pic">
+  <v-layout row wrap mt-5>
+    <v-flex xs12>
+      <span class="title mb-3">Latest Collections</span>
+    </v-flex>
+    <v-flex sm6 xs12 mb-4 v-for="(item,i) in products" :key="i">
+      <v-card flat tile class="collection">
+        <v-layout row wrap class="pictures">
+          <v-flex xs9 class="main-pic">
+            <router-link to="/subcategory">
               <img :src="item.mainPic" alt="Product Image">
-            </v-flex>
-            <v-flex xs3 class="other-pics">
-              <div class="text-xs-center" v-for="(smallitem,i) in item.others" :key="i">
-                <img :src="smallitem.src" alt="Other Product Pictures">
-              </div>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap class="details">
-            <v-flex xs9 class="pa-3">
+            </router-link>
+          </v-flex>
+          <v-flex xs3 class="other-pics">
+            <div class="text-xs-center" v-for="(smallitem,i) in item.others" :key="i">
+              <img :src="smallitem.src" alt="Other Product Pictures">
+            </div>
+          </v-flex>
+        </v-layout>
+        <v-layout row wrap class="details">
+          <v-flex xs9 class="pa-3">
+            <router-link to="/subcategory">
               <h4 class="mb-2">{{item.title}}</h4>
-              <p>{{item.description}}</p>
-            </v-flex>
-            <v-flex xs3 class="pt-3 pl-2">
-              <div class="mb-4">20 items</div>
-              <a href="#" class="link">Check them out</a>
-            </v-flex>
-          </v-layout>
-        </v-card>
-      </v-flex>
-      <v-flex xs12 text-xs-center mt-3>
-        <v-btn color="btncolor" class="submit-btn">More</v-btn>
-      </v-flex>
-    </v-layout>
+            </router-link>
+            <p>{{item.description}}</p>
+          </v-flex>
+          <v-flex xs3 class="pt-3 pl-2">
+            <div class="mb-4">20 items</div>
+            <router-link to="/subcategory" class="link">Check them out</router-link>
+          </v-flex>
+        </v-layout>
+      </v-card>
+    </v-flex>
+    <v-flex xs12 text-xs-center mt-3>
+      <v-btn color="btncolor" class="submit-btn">More</v-btn>
+    </v-flex>
+  </v-layout>
 </template>
 <script>
 export default {
