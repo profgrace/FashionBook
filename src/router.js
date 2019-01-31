@@ -2,6 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Home from "./views/Home.vue";
 import SubCategory from "./views/SubCategory.vue";
+import SingleProduct from "./views/SingleProduct.vue";
 import PostAd from "./views/PostAd.vue";
 import GetStarted from "./views/GetStarted.vue";
 
@@ -19,6 +20,11 @@ export default new Router({
       path: "/subcategory",
       name: "subcategory",
       component: SubCategory
+    },
+    {
+      path: "/single",
+      name: "single",
+      component: SingleProduct
     },
     {
       path: "/postad",
