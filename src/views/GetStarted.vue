@@ -1,4 +1,5 @@
 <template>
+
   <v-container grid-list-xs>
     <div class="getstarted post">
       <v-tabs fixed-tabs>
@@ -44,10 +45,33 @@
             <v-form @submit.prevent="login('login')" v-if="!forgot">
               <v-layout row wrap>
                 <v-flex xs12>
-                  <v-text-field box label="Email Address"></v-text-field>
+                  <v-text-field
+                  box
+                  label="Email Address"
+                  type="text"
+                  v-model="email"
+                  :error-messages="errors.collect('login.email')"
+                  v-validate="'required'"
+                  data-vv-name="login.email"
+                  data-vv-as="Email"
+                  @keydown.native.space.prevent
+                  required
+                  ></v-text-field>
                 </v-flex>
                 <v-flex xs12>
-                  <v-text-field box label="Password"></v-text-field>
+                  <v-text-field
+                  box
+                  label="Password"
+                  type="password"
+                  v-model="password"
+                  :error-messages="errors.collect('login.password')"
+                  v-validate="'required'"
+                  data-vv-name="login.password"
+                  data-vv-as="Password"
+                  @keydown.native.space.prevent
+                  v-on:keyup.enter="login"
+                  required
+                  ></v-text-field>
                 </v-flex>
                 <v-flex xs12 class="forgot">
                   <a @click="forgot = true">Forgot Password?</a>
@@ -55,7 +79,7 @@
               </v-layout>
               <v-layout row wrap justify-center>
                 <v-flex xs12 class="more" my-4>
-                  <v-btn class="submit" color="btncolor">Log in</v-btn>
+                  <v-btn type="submit" class="submit" color="btncolor">Log in</v-btn>
                 </v-flex>
               </v-layout>
             </v-form>
@@ -92,8 +116,53 @@ export default {
       forgot: false,
       email: "",
       password: "",
+      url: this.$appConfig,
+      processingData: false,
+      validate: [],
       emailAddress: ""
     };
+  },
+  methods: {
+    login(scope) {
+      let that = this;
+      const loginData = {
+        email: this.email,
+        password: this.password
+      };
+
+      this.$validator.validateAll(scope).then(result => {
+        if (result) {
+          this.processingData = true;
+          this.$store
+            .dispatch("user/login", loginData)
+            .then(result => {
+              if (result.status === 200) {
+                if (result.data.error) {
+                  /* UI to show data is precessing will be here */
+                  this.processingData = false;
+                } else {
+                  that.currentToken = result.data.token;
+                  that.$session.set("currentToken", that.currentToken);
+                  that.$router.push({ path: "/" }); // to be changed later
+                  this.processingData = false;
+                }
+              } // else part to be included here later when some things are clearer
+            })
+            .catch(error => {
+              if (error.status > 299) {
+                that.processingData = false;
+              }
+            });
+        }
+      });
+    },
+    sendLink(scope) {
+      this.$validator.validateAll(scope).then(result => {
+        if (result) {
+          this.processingData = true;
+        }
+      });
+    }
   }
 };
 </script>
