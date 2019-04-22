@@ -32,7 +32,7 @@ const actions = {
   },
   async registerMerchant({ rootState }, payload) {
     const registerMerchantResponse = await api.registerFashBookMerchant(
-      rootState.appConfig,
+      rootState.$appConfig,
       payload
     );
     return registerMerchantResponse;
