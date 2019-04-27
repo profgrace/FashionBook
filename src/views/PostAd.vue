@@ -7,31 +7,31 @@
           <v-flex xs12>
             <h3>Ad Details</h3>
           </v-flex>
-          <v-flex xs6>
-            <v-autocomplete box :items="categories" v-model="selectedCategory" label="Choose Category"></v-autocomplete>
+          <v-flex xs12 md6>
+            <v-autocomplete box :items="categories" label="Choose Category"></v-autocomplete>
           </v-flex>
-          <v-flex xs6>
-            <v-autocomplete box :items="subcategories" v-model="selectedSubCategory" label="Choose Subcategory"></v-autocomplete>
+          <v-flex xs12 md6>
+            <v-autocomplete box :items="subcategories" label="Choose Subcategory"></v-autocomplete>
           </v-flex>
-          <v-flex xs12>
-            <v-text-field box label="Title" v-model="title"></v-text-field>
+          <v-flex xs12 md6>
+            <v-text-field box label="Title"></v-text-field>
           </v-flex>
-          <v-flex xs12>
-            <v-textarea box label="Description" v-model="description"></v-textarea>
+          <v-flex xs12 md6>
+            <v-textarea box label="Description"></v-textarea>
           </v-flex>
-          <v-flex xs6>
-            <v-text-field box label="Price" v-model="price"></v-text-field>
+          <v-flex xs12 md6>
+            <v-text-field box label="Price"></v-text-field>
           </v-flex>
-          <v-flex xs6>
-            <v-checkbox label="Negotiable" v-model="isNegotiable" ></v-checkbox>
+          <v-flex xsxs12 md66>
+            <v-checkbox label="Negotiable"></v-checkbox>
           </v-flex>
-          <v-flex xs12>
+          <v-flex xs12 md6>
             <v-divider></v-divider>
           </v-flex>
           <v-flex xs12 mt-4>
             <h3>Add Photos</h3>
           </v-flex>
-          <v-flex xs2 class="photo first">
+          <v-flex xs6 md2 class="photo first">
             <v-btn v-if="pic1Url == ''" @click="takePic1">
               <v-icon>photo_camera</v-icon>
             </v-btn>
@@ -50,7 +50,7 @@
               </div>
             </div>
           </v-flex>
-          <v-flex xs2 class="photo">
+          <v-flex xs6 md2 class="photo">
             <v-btn v-if="pic2Url == ''" @click="takePic2">
               <v-icon>photo_camera</v-icon>
             </v-btn>
@@ -69,7 +69,7 @@
               </div>
             </div>
           </v-flex>
-          <v-flex xs2 class="photo">
+          <v-flex xs6 md2 class="photo">
             <v-btn v-if="pic3Url == ''" @click="takePic3">
               <v-icon>photo_camera</v-icon>
             </v-btn>
@@ -88,7 +88,7 @@
               </div>
             </div>
           </v-flex>
-          <v-flex xs2 class="photo">
+          <v-flex xs6 md2 class="photo">
             <v-btn v-if="pic4Url == ''" @click="takePic4">
               <v-icon>photo_camera</v-icon>
             </v-btn>
@@ -107,7 +107,7 @@
               </div>
             </div>
           </v-flex>
-          <v-flex xs2 class="photo">
+          <v-flex xs6 md2 class="photo">
             <v-btn v-if="pic5Url == ''" @click="takePic5">
               <v-icon>photo_camera</v-icon>
             </v-btn>
@@ -126,7 +126,7 @@
               </div>
             </div>
           </v-flex>
-          <v-flex xs2 class="photo">
+          <v-flex xs6 md2 class="photo">
             <v-btn v-if="pic6Url == ''" @click="takePic6">
               <v-icon>photo_camera</v-icon>
             </v-btn>

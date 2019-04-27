@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <HomeSlider/>
-    <v-container grid-list-xs>
+    <v-container grid-list-xs pt-0>
       <Search/>
       <Ad/>
       <Latest/>

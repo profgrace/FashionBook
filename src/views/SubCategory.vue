@@ -9,21 +9,21 @@
     </v-layout>
     <v-layout row wrap class="sort">
       <v-spacer></v-spacer>
-      <v-flex xs2 d-flex>
+      <v-flex md2 xs6 d-flex>
         <v-select solo :items="sortBy" v-model="sort" label="Sort By"></v-select>
       </v-flex>
     </v-layout>
     <v-layout row wrap mt-4>
-      <v-flex xs2 pa-2 class="ads">
+      <v-flex md2 pa-2 class="ads">
         <v-layout row wrap>
           <v-flex xs12 ad>Ad 1</v-flex>
           <v-flex xs12 ad>Ad 2</v-flex>
           <v-flex xs12 ad>Ad 3</v-flex>
         </v-layout>
       </v-flex>
-      <v-flex pa-2 xs10 class="subcategory">
+      <v-flex pa-2 md10 xs12 class="subcategory">
         <v-layout row wrap mb-4 class="product" v-for="(single, i) in singleProducts" :key="i">
-          <v-flex xs3 pa-3 class="images">
+          <v-flex md3 xs12 pa-3 class="images">
             <router-link to="/single">
               <template>
                 <v-carousel
@@ -43,9 +43,9 @@
               </span>
             </router-link>
           </v-flex>
-          <v-flex xs9 class="details">
+          <v-flex md9 xs12 class="details">
             <v-layout row wrap>
-              <v-flex xs8 class="main-details pa-4">
+              <v-flex md8 xs12 class="main-details pa-4">
                 <span class="title">
                   <router-link to="/single">{{single.title}}</router-link>
                 </span>
@@ -59,7 +59,7 @@
                   {{single.location}}
                 </span>
               </v-flex>
-              <v-flex xs4 class="extra-details px-4">
+              <v-flex md4 xs12 class="extra-details px-4">
                 <span>
                   <v-icon color="primary">favorite_border</v-icon>
                 </span>
