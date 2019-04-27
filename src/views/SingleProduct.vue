@@ -2,7 +2,7 @@
   <v-container grid-list-xs class="single">
     <Search></Search>
     <v-layout row wrap mt-5 class="meta">
-      <v-flex xs6 class="pagetitle">
+      <v-flex md6 xs12 class="pagetitle">
         <div class="title">Ladies Tote Bag</div>
         <span>
           <v-icon>location_on</v-icon>At Ikeja GRA, Lagos.
@@ -11,7 +11,7 @@
           <v-icon>access_time</v-icon>Posted May 23, 2018
         </span>
       </v-flex>
-      <v-flex xs6 class="like">
+      <v-flex md6 xs12 class="like">
         <span>
           <v-icon color="primary">favorite_border</v-icon>
         </span>
@@ -21,10 +21,10 @@
       </v-flex>
     </v-layout>
     <v-layout row wrap mb-5 class="content">
-      <v-flex xs8>
+      <v-flex md8 xs12>
         <div class="product-details">
           <v-layout row wrap class="images">
-            <v-flex xs2 class="thumbnails">
+            <v-flex md2 xs3 class="thumbnails">
               <div
                 v-for="(image, index) in  products"
                 :key="image.id"
@@ -34,7 +34,7 @@
                 <img :src="image.thumb">
               </div>
             </v-flex>
-            <v-flex xs10>
+            <v-flex md10 xs9>
               <v-carousel
                 prev-icon="chevron_left"
                 next-icon="chevron_right"
@@ -48,6 +48,24 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap class="dets">
+            <v-flex xs12 class="product-about mobile">
+              <div class="price mb-4">
+                <span>Price: N 8,000</span>
+              </div>
+              <div class="store">By BeautySupplies</div>
+              <span>Verified</span>
+              <div class="last-seen">Last seen 2 hours ago</div>
+              <div class="phone mt-3">
+                080
+                <span>xxx</span>
+                <span class="show">Show Phone</span>
+              </div>
+              <div class="talk">
+                <v-btn color="success">
+                  <img src="../assets/icons/whatsapp.png" alt> Talk to Seller
+                </v-btn>
+              </div>
+            </v-flex>
             <v-flex xs12 mt-5>
               <div class="title">Ad Details</div>
               <p>
@@ -94,7 +112,7 @@
             <span class="title mb-3">Similar Adverts</span>
           </v-flex>
           <v-layout row wrap mb-4 class="product">
-            <v-flex xs3 pa-3 class="images">
+            <v-flex md3 xs12 pa-3 class="images">
               <template>
                 <v-carousel
                   prev-icon="chevron_left"
@@ -112,9 +130,9 @@
                 <v-icon>photo_camera</v-icon>
               </span>
             </v-flex>
-            <v-flex xs9 class="details">
+            <v-flex md9 xs12 class="details">
               <v-layout row wrap>
-                <v-flex xs8 class="main-details pa-4">
+                <v-flex md8 xs12 class="main-details pa-4">
                   <span class="title">Ladies' Tote bag</span>
                   <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
                   <span class="color">
@@ -124,7 +142,7 @@
                     <v-icon>location_on</v-icon>Lagos, Nigeria
                   </span>
                 </v-flex>
-                <v-flex xs4 class="extra-details px-4">
+                <v-flex md4 xs12 class="extra-details px-4">
                   <span>
                     <v-icon color="primary">favorite_border</v-icon>
                   </span>
@@ -135,7 +153,7 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap mb-4 class="product">
-            <v-flex xs3 pa-3 class="images">
+            <v-flex md3 xs12 pa-3 class="images">
               <template>
                 <v-carousel
                   prev-icon="chevron_left"
@@ -153,9 +171,9 @@
                 <v-icon>photo_camera</v-icon>
               </span>
             </v-flex>
-            <v-flex xs9 class="details">
+            <v-flex md9 xs12 class="details">
               <v-layout row wrap>
-                <v-flex xs8 class="main-details pa-4">
+                <v-flex md8 xs12 class="main-details pa-4">
                   <span class="title">Ladies' Tote bag</span>
                   <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
                   <span class="color">
@@ -165,7 +183,7 @@
                     <v-icon>location_on</v-icon>Lagos, Nigeria
                   </span>
                 </v-flex>
-                <v-flex xs4 class="extra-details px-4">
+                <v-flex md4 xs12 class="extra-details px-4">
                   <span>
                     <v-icon color="primary">favorite_border</v-icon>
                   </span>
@@ -176,7 +194,7 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap mb-4 class="product">
-            <v-flex xs3 pa-3 class="images">
+            <v-flex md3 xs12 pa-3 class="images">
               <template>
                 <v-carousel
                   prev-icon="chevron_left"
@@ -194,9 +212,9 @@
                 <v-icon>photo_camera</v-icon>
               </span>
             </v-flex>
-            <v-flex xs9 class="details">
+            <v-flex md9 xs12 class="details">
               <v-layout row wrap>
-                <v-flex xs8 class="main-details pa-4">
+                <v-flex md8 xs12 class="main-details pa-4">
                   <span class="title">Ladies' Tote bag</span>
                   <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
                   <span class="color">
@@ -206,7 +224,7 @@
                     <v-icon>location_on</v-icon>Lagos, Nigeria
                   </span>
                 </v-flex>
-                <v-flex xs4 class="extra-details px-4">
+                <v-flex md4 xs12 class="extra-details px-4">
                   <span>
                     <v-icon color="primary">favorite_border</v-icon>
                   </span>
@@ -223,7 +241,7 @@
           </v-layout>
         </v-layout>
       </v-flex>
-      <v-flex xs4>
+      <v-flex xs12 md4>
         <v-layout row wrap ml-4>
           <v-flex xs12 class="product-about">
             <div class="price mb-4">

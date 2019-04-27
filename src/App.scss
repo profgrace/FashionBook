@@ -462,6 +462,9 @@ footer {
       padding: 30px 50px !important;
       background-color: white;
       border-bottom: 1px solid #d30069;
+      &.mobile {
+        display: none;
+      }
       .price {
         text-align: center;
         justify-content: center;
@@ -679,6 +682,83 @@ nav {
   .container {
     &.grid-list-xs {
       padding: 2px !important;
+    }
+  }
+}
+
+@media (max-width: 420px) {
+  .single {
+    .ads {
+      display: none;
+    }
+    .meta {
+      .like {
+        text-align: left;
+        > span {
+          width: 50%;
+        }
+      }
+    }
+    .content {
+      .layout {
+        margin-left: 0 !important;
+      }
+      .product-about {
+        padding: 30px !important;
+        display: none;
+        &.mobile {
+          display: inline-block;
+        }
+      }
+      .product-details {
+        padding: 20px 0 !important;
+        .slider {
+          height: 300px !important;
+          .v-image__image {
+            background-size: 250px auto;
+          }
+        }
+        .dets {
+          > div {
+            margin-top: 20px !important;
+          }
+        }
+      }
+      .post-ad {
+        margin: 20px 0 60px !important;
+      }
+    }
+  }
+  .subcategory {
+    .details {
+      .extra-details {
+        margin-top: 0 !important;
+        padding-bottom: 20px !important;
+        text-align: left;
+        .price {
+          margin-top: 0;
+        }
+        > * {
+          display: inline;
+          margin-left: 20px;
+          width: 32%;
+          &:first-child {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+    .more {
+      margin: 0 !important;
+    }
+  }
+  .getstarted {
+    width: auto;
+  }
+  .post {
+    margin: 20px 0;
+    form {
+      padding: 0;
     }
   }
 }
