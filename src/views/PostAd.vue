@@ -191,8 +191,8 @@ export default {
       subcategories: ["Fashion", "Health"],
       states: ["Lagos", "Ibadan"],
       lgas: ["Kosofe"],
-      processingData = true,
-      signUpText = "Post Ad"
+      processingData: true,
+      signUpText: "Post Ad"
     };
   },
   methods: {
