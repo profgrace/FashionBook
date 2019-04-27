@@ -3,13 +3,17 @@ import Vuex from "vuex";
 import VueAxios from "vue-axios";
 import axios from "axios";
 import user from "./store/modules/user";
+import postad from "./store/modules/postad";
+import products from "./store/modules/products";
 
 Vue.use(Vuex);
 Vue.use(VueAxios, axios);
 
 export default new Vuex.Store({
   modules: {
-    user
+    user,
+    postad,
+    products
   },
 
   state: {

@@ -224,9 +224,12 @@ export default {
       const loginData = {
       	name: this.regFirstName + " " + this.regLastName,
       	email: this.regEmail,
+        firstname: this.regFirstName,
+        lastname: this.regLastName,
+        phoneNumber: this.regPhoneNumber,
       	password: this.regPassword,
       	password_confirmation: this.regPassword,
-      	role: this.PhoneNumber
+      	role: "merchant"
       };
 
       this.$validator.validateAll(scope).then(result => {
@@ -243,8 +246,10 @@ export default {
                   this.processingData = false;
                 } else {
                   this.signUpText = "Sign Up";
-                  that.$router.push({ path: "/" }); // to be changed later
                   this.processingData = false;
+                  that.currentToken = result.data.token;
+                  that.$session.set("currentToken", that.currentToken);
+                  that.$router.push({ path: "/" }); // to be changed later
                 }
               } // else part to be included here later when some things are clearer
             })
