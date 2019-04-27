@@ -67,6 +67,7 @@
                 v-validate="'required'"
                 data-vv-name="register.regPhoneNumber"
                 data-vv-as="PhoneNumber"
+                v-mask="['0### ### ####', '0# ### ####']"
                 @keydown.native.space.prevent
                 required
               ></v-text-field>
@@ -244,6 +245,7 @@ export default {
             .dispatch("user/registerMerchant", loginData)
             .then(result => {
               if (result.status === 201) {
+
                 if (result.data.error) {
                   /* UI to show data is precessing will be here */
                   this.signUpText = "Sign Up";
@@ -255,10 +257,15 @@ export default {
                   that.$session.set("currentToken", that.currentToken);
                   that.$router.push({ path: "/" }); // to be changed later
                 }
-              } // else part to be included here later when some things are clearer
+              } else if(result.status === 400) {
+                this.signUpText = "Sign Up";
+                this.processingData = false;
+
+              }
             })
             .catch(error => {
               if (error.status > 299) {
+
                 that.processingData = false;
               }
             });

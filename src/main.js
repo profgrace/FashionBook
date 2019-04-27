@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Vuetify from "vuetify";
+import VueTheMask from 'vue-the-mask';
 import "./registerServiceWorker";
 import VeeValidate from "vee-validate";
 import axios from "axios";
@@ -33,7 +34,7 @@ Vue.use(VueAxios, axios);
 Vue.config.productionTip = false;
 
 Vue.use(VeeValidate);
-
+Vue.use(VueTheMask);
 Vue.use(Vuetify, {
   theme: {
     primary: "#D30069",
