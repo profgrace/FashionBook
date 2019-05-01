@@ -8,22 +8,29 @@
             <h3>Ad Details</h3>
           </v-flex>
           <v-flex xs12 md6>
-            <v-autocomplete box :items="categories" label="Choose Category"></v-autocomplete>
+            <v-autocomplete box :items="categories" v-model="selectedCategory"
+              @change="fetchSubCategories(selectedCategory)"
+             label="Choose Category"></v-autocomplete>
           </v-flex>
           <v-flex xs12 md6>
-            <v-autocomplete box :items="subcategories" label="Choose Subcategory"></v-autocomplete>
+            <v-autocomplete box :items="subCategories" label="Choose sub category"
+            :disabled="selectedCategory < 1 "
+            v-model="selectedSubCategory"></v-autocomplete>
           </v-flex>
           <v-flex xs12 md6>
-            <v-text-field box label="Title"></v-text-field>
+            <v-text-field box label="Title" v-model="title"></v-text-field>
           </v-flex>
           <v-flex xs12 md6>
-            <v-textarea box label="Description"></v-textarea>
+            <v-textarea box label="Description" v-model="description"></v-textarea>
           </v-flex>
           <v-flex xs12 md6>
-            <v-text-field box label="Price"></v-text-field>
+            <v-text-field box label="Price" v-model="price"
+            v-mask="['########']"
+            @keydown.native.space.prevent
+            ></v-text-field>
           </v-flex>
           <v-flex xsxs12 md66>
-            <v-checkbox label="Negotiable"></v-checkbox>
+            <v-checkbox label="Negotiable" v-model="isNegotiable"></v-checkbox>
           </v-flex>
           <v-flex xs12 md6>
             <v-divider></v-divider>
@@ -155,28 +162,56 @@
             <h3>Contact Info</h3>
           </v-flex>
           <v-flex sm6 xs12>
-            <v-text-field box label="Business / Personal Name"></v-text-field>
+            <v-text-field box label="Business / Personal Name" v-model="businessName"></v-text-field>
           </v-flex>
           <v-flex sm6 xs12>
-            <v-text-field box label="Phone Number"></v-text-field>
+            <v-text-field box label="Phone Number" v-model="phoneNumber"
+            v-mask="['0### ### ####', '0# ### ####']"
+            @keydown.native.space.prevent
+            ></v-text-field>
           </v-flex>
           <v-flex sm6 xs12>
-            <v-autocomplete box :items="states" label="State"></v-autocomplete>
+            <v-autocomplete box :items="states" label="State"
+            v-model="state"
+            :error-messages="errors.collect('state')"
+            @change="fetchLGAs(state)"
+            data-vv-name="state"
+            data-vv-as="State"
+            ></v-autocomplete>
           </v-flex>
           <v-flex sm6 xs12>
-            <v-autocomplete box :items="lgas" label="LGA"></v-autocomplete>
+            <v-autocomplete box :items="lgas" label="LGA"
+            v-model="lga"
+            :error-messages="errors.collect('lga')"
+            v-validate="'required'"
+            :disabled="state < 1 "
+            data-vv-name="lga"
+            data-vv-as="LGA"
+            ></v-autocomplete>
           </v-flex>
         </v-layout>
         <v-layout row wrap justify-center>
           <v-flex xs4 class="more" my-4>
-            <v-btn class="submit" color="btncolor">Post Ad</v-btn>
+            <v-btn class="submit" :disabled="processingData" @click="postNewAd('postad')" color="btncolor">{{signUpText}}</v-btn>
           </v-flex>
         </v-layout>
       </v-form>
+      <v-dialog v-model="actionDialog" persistent width="500">
+        <v-card>
+          <v-card-title>
+            <span class="headline">{{actionMsg}}</span>
+          </v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="primary" outline @click="actionDialog = false">Okay</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-container>
   </v-app>
 </template>
 <script>
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex';
 import imageCompression from "browser-image-compression";
 export default {
   data() {
@@ -187,13 +222,111 @@ export default {
       pic4Url: "",
       pic5Url: "",
       pic6Url: "",
-      categories: ["Fashion", "Health"],
-      subcategories: ["Fashion", "Health"],
-      states: ["Lagos", "Ibadan"],
-      lgas: ["Kosofe"]
+      lga: "",
+      state: "",
+      actionDialog: false,
+      processingData: false,
+      signUpText: "Post Ad",
+      selectedCategory: null,
+      selectedSubCategory: null,
+      title: "",
+      description: "",
+      gender: "N/A",
+      type: "N/A",
+      colour: "N/A",
+      price: null,
+      phoneNumber: null,
+      contactName: "",
+      isNegotiable: false,
+      merchantID: "",
+      sellerAddress: "",
+      businessName: "",
+      actionMsg: ""
     };
   },
+  created() {
+    this.$store.dispatch('getStates');
+    this.$store.dispatch('getCategories');
+  },
+  computed: {
+    ...mapState(['states', 'lgas']),
+    ...mapState(['categories', 'subCategories']),
+    ...mapGetters({ states: 'stateLists', lgas: 'lgaLists' }),
+    ...mapGetters({ categories: 'categoryLists', subCategoryLists: 'subCategoryLists' })
+  },
   methods: {
+    postNewAd(scope) {
+        let that = this;
+        const reformedState = this.state.split('-');
+        const stateToPost = reformedState[1];
+        const reformedCategory = this.state.split('-');
+        const categoryToPost = reformedCategory[0];
+        let isNegotiableNum = 0;
+        if(this.isNegotiable === true){
+          isNegotiableNum = 1;
+        }
+        const newPostData = {
+        	category_id: categoryToPost,
+        	sub_category: this.selectedSubCategory,
+        	title: this.title,
+        	description: this.description,
+        	gender: this.gender,
+        	type: this.type,
+        	colour: this.colour,
+        	price: this.price,
+        	phone: this.phoneNumber,
+        	contact_name: this.contactName,
+        	region: stateToPost,
+        	place: this.lga,
+        	isnogiatiable: isNegotiableNum,
+        	merchant_id: this.merchantID,
+        	seller_address: this.sellerAddress,
+        	main_image: "",//this.pic1Url,
+          other_image: [
+        		{
+        		"image_1": ""//this.pic2Url
+        		},
+        		{
+        		"image_2": ""
+        		},
+        		{
+        		"image_3": ""
+        		},
+        		{
+        		"image_4": ""
+            }
+      		],
+      	   business_name: this.businessName
+        };
+        console.log(newPostData);
+        this.$validator.validateAll(scope).then(result => {
+          if (result) {
+            this.processingData = true;
+            this.signUpText = "Processing..."
+            this.$store
+              .dispatch("postad/postFreeAd", newPostData)
+              .then(result => {
+                if (result.status === 200) {
+                  if (result.data.error) {
+                    /* UI to show data is precessing will be here */
+                    this.signUpText = "Post Ad";
+                    this.processingData = false;
+                  } else {
+                    this.signUpText = "Post Ad";
+                    this.processingData = false;
+                    this.actionMsg = result.data.message;
+                    this.actionDialog = true;
+                  }
+                } // else part to be included here later when some things are clearer
+              })
+              .catch(error => {
+                if (error.status > 299) {
+                  that.processingData = false;
+                }
+              });
+          }
+        });
+    },
     takePic1() {
       this.$refs.productPic1.click();
     },
@@ -229,6 +362,7 @@ export default {
     },
     handleCompress(event) {
       let imageFile = event.target.files[0];
+
       let maxSizeMB = 0.1;
       let maxWidthOrHeight = 600;
       let __this = this;
@@ -251,9 +385,25 @@ export default {
             }
           });
           fileReader.readAsDataURL(compressedFile);
+
         })
         .catch(function() {});
-    }
+    },
+    fetchStates() {
+      this.getStates();
+    },
+    fetchLGAs(state) {
+      console.log(state);
+      this.getLGAs({ state });
+    },
+    fetchCategories() {
+      this.getCategories();
+    },
+    fetchSubCategories(state) {
+      this.getSubcategories({ state });
+    },
+    ...mapActions(['getStates', 'getLGAs']),
+    ...mapActions(['getCategories', 'getSubcategories'])
   }
 };
 </script>
