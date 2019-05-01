@@ -2,11 +2,11 @@ import api from "../../api";
 
 // post new ad service
 const actions = {
-  async postFreeAd({ rootState }, { bearerToken, entryID }) {
-    const postFreeAdResponse = await api.postNewAd(rootState.$appConfig, {
-      bearerToken,
-      entryID
-    });
+  async postFreeAd({ rootState }, payload) {
+    const postFreeAdResponse = await api.postNewAd(
+      rootState.$appConfig,
+      payload
+    );
     return postFreeAdResponse;
   },
 

@@ -4,7 +4,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Vuetify from "vuetify";
-import VueTheMask from 'vue-the-mask';
+import VueTheMask from "vue-the-mask";
 import "./registerServiceWorker";
 import VeeValidate from "vee-validate";
 import axios from "axios";

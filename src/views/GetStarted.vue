@@ -73,7 +73,7 @@
               ></v-text-field>
             </v-flex>
             <v-flex xs12>
-              <v-checkbox @click="checkAgreement">
+              <v-checkbox v-model="agreeToTerms" >
                 <template
                   slot="label"
                 >By Registering, you agree that you’ve read and accepted our User Agreement, you’re at least 18 years old, and you consent to our Privacy Notice and receiving marketing communications from us.</template>
@@ -125,7 +125,7 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 class="more" my-4>
-              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingData">{{ loginText }}</v-btn>
+              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingData || agreeToTerms">{{ loginText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
               <v-btn flat @click="swapFormRegister" class="text-none swapBtn">Don't have an account yet? Sign up</v-btn>
@@ -152,6 +152,17 @@
             </v-flex>
           </v-layout>
         </v-form>
+        <v-dialog v-model="actionDialog" persistent width="500">
+          <v-card>
+            <v-card-title>
+              <span class="headline">Congratulations! You're now a Fashion Book Merchant</span>
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="primary" outline @click="navigate">Proceed</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
       </v-container>
     </div>
   </v-container>
@@ -160,8 +171,9 @@
 export default {
   data() {
     return {
+      actionDialog: false,
       forgot: false,
-      agreeToTerms: false,
+      agreeToTerms: true,
       email: "",
       password: "",
       emailAddress: "",
@@ -180,7 +192,9 @@ export default {
   },
   methods: {
     checkAgreement() {
-      this.agreeToTerms = true;
+      if(this.agreeToTerms === false) {
+        this.processingData = true;
+      }
     },
     swapForm() {
       this.login = true;
@@ -189,6 +203,10 @@ export default {
     swapFormRegister() {
       this.register = true;
       this.login = false;
+    },
+    navigate() {
+      this.$router.push({ path: "/" });
+      this.actionDialog = false;
     },
     loginMerchant(scope) {
       let that = this;
@@ -209,7 +227,7 @@ export default {
                   this.processingData = false;
                   this.loginText = "Login";
                 } else {
-                  that.currentToken = result.data.token;
+                  that.currentToken = "Bearer " + result.data.token;
                   that.$session.set("currentToken", that.currentToken);
                   that.$router.push({ path: "/" }); // to be changed later
                   this.processingData = false;
@@ -255,7 +273,8 @@ export default {
                   this.processingData = false;
                   that.currentToken = result.data.token;
                   that.$session.set("currentToken", that.currentToken);
-                  that.$router.push({ path: "/" }); // to be changed later
+                  this.actionDialog = true;
+                  //that.$router.push({ path: "/" }); // to be changed later
                 }
               } else if(result.status === 400) {
                 this.signUpText = "Sign Up";
