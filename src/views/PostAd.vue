@@ -13,19 +13,19 @@
           <v-flex xs12 md6>
             <v-autocomplete box :items="subcategories" label="Choose Subcategory"></v-autocomplete>
           </v-flex>
-          <v-flex xs12 md6>
+          <v-flex xs12>
             <v-text-field box label="Title"></v-text-field>
           </v-flex>
-          <v-flex xs12 md6>
+          <v-flex xs12>
             <v-textarea box label="Description"></v-textarea>
           </v-flex>
           <v-flex xs12 md6>
             <v-text-field box label="Price"></v-text-field>
           </v-flex>
-          <v-flex xsxs12 md66>
+          <v-flex xs12 md6>
             <v-checkbox label="Negotiable"></v-checkbox>
           </v-flex>
-          <v-flex xs12 md6>
+          <v-flex xs12>
             <v-divider></v-divider>
           </v-flex>
           <v-flex xs12 mt-4>

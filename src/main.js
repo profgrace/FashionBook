@@ -12,7 +12,8 @@ Vue.use(Vuetify, {
   theme: {
     primary: "#D30069",
     secondary: "#035E6A",
-    btncolor: "#DAC416"
+    btncolor: "#DAC416",
+    darkgrey: "#333333"
   }
 });
 

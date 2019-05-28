@@ -5,6 +5,9 @@ import SubCategory from "./views/SubCategory.vue";
 import SingleProduct from "./views/SingleProduct.vue";
 import PostAd from "./views/PostAd.vue";
 import GetStarted from "./views/GetStarted.vue";
+import ProductList from "./views/VendorProducts.vue";
+import AddProducts from "./views/AddProducts.vue";
+import VendorProfile from "./views/VendorProfile.vue";
 
 Vue.use(Router);
 
@@ -35,6 +38,21 @@ export default new Router({
       path: "/getstarted",
       name: "getstarted",
       component: GetStarted
+    },
+    {
+      path: "/addproducts",
+      name: "addproducts",
+      component: AddProducts
+    },
+    {
+      path: "/vendorprofile",
+      name: "vendorprofile",
+      component: VendorProfile
+    },
+    {
+      path: "/productlist",
+      name: "productlist",
+      component: ProductList
     }
   ]
 });
