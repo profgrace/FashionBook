@@ -13,7 +13,8 @@
       </v-flex>
       <v-flex md6 xs12 class="like">
         <span>
-          <v-icon color="primary">favorite_border</v-icon>
+          <v-icon @click="liked = true" color="primary" v-if="!liked">favorite_border</v-icon>
+          <v-icon @click="liked = false" color="primary" v-if="liked">favorite</v-icon>
         </span>
         <span>
           <b>34 people</b> already like this
@@ -56,9 +57,9 @@
               <span>Verified</span>
               <div class="last-seen">Last seen 2 hours ago</div>
               <div class="phone mt-3">
-                080
-                <span>xxx</span>
-                <span class="show">Show Phone</span>
+                <span v-if="!phoneShow">080 xxx</span>
+                <span class="show" @click="phoneShow = true" v-if="!phoneShow">Show Phone</span>
+                <span v-if="phoneShow">081 234 5678</span>
               </div>
               <div class="talk">
                 <v-btn color="success">
@@ -251,9 +252,9 @@
             <span>Verified</span>
             <div class="last-seen">Last seen 2 hours ago</div>
             <div class="phone mt-3">
-              080
-              <span>xxx</span>
-              <span class="show">Show Phone</span>
+              <span v-if="!phoneShow">080 xxx</span>
+              <span class="show" @click="phoneShow = true" v-if="!phoneShow">Show Phone</span>
+              <span v-if="phoneShow">081 234 5678</span>
             </div>
             <div class="talk">
               <v-btn color="success">
@@ -281,13 +282,14 @@
     </v-layout>
   </v-container>
 </template>
-
 <script>
 import Search from "../components/Search.vue";
 import PostAd from "../components/CallToAction.vue";
 export default {
   data() {
     return {
+      phoneShow: false,
+      liked: false,
       sortBy: ["Newest", "Oldest"],
       sort: "",
       activeImage: 0,
@@ -339,6 +341,9 @@ export default {
     };
   },
   methods: {
+    showMerchantPhone() {
+      alert("Works!");
+    },
     nextImage() {
       var active = this.activeImage + 1;
       if (active >= this.products.length) {
@@ -370,3 +375,5 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+</style>
