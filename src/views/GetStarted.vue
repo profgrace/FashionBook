@@ -82,7 +82,7 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 class="more" my-4>
-              <v-btn type="submit" :disabled="processingData" class="submit" color="btncolor">{{ signUpText }}</v-btn>
+              <v-btn type="submit" :disabled="processingData || agreeToTerms" class="submit" color="btncolor">{{ signUpText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
               <v-btn flat @click="swapForm" class="text-none swapBtn">Already have an account? Log in</v-btn>
@@ -125,7 +125,7 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 class="more" my-4>
-              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingData || agreeToTerms">{{ loginText }}</v-btn>
+              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingLogin">{{ loginText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
               <v-btn flat @click="swapFormRegister" class="text-none swapBtn">Don't have an account yet? Sign up</v-btn>
@@ -173,13 +173,14 @@ export default {
     return {
       actionDialog: false,
       forgot: false,
-      agreeToTerms: true,
+      agreeToTerms: false,
       email: "",
       password: "",
       emailAddress: "",
       login: false,
       register: true,
       processingData: false,
+      processingLogin: false,
       validate: [],
       regEmail: "",
       regFirstName: "",
@@ -191,11 +192,7 @@ export default {
     };
   },
   methods: {
-    checkAgreement() {
-      if (this.agreeToTerms === false) {
-        this.processingData = true;
-      }
-    },
+
     swapForm() {
       this.login = true;
       this.register = false;
@@ -216,7 +213,7 @@ export default {
       };
       this.$validator.validateAll(scope).then(result => {
         if (result) {
-          this.processingData = true;
+          this.processingLogin = true;
           this.loginText = "Processing...";
           this.$store
             .dispatch("user/login", loginData)
@@ -224,20 +221,27 @@ export default {
               if (result.status === 200) {
                 if (result.data.error) {
                   /* UI to show data is precessing will be here */
-                  this.processingData = false;
+                  this.processingLogin = false;
                   this.loginText = "Login";
                 } else {
                   that.currentToken = "Bearer " + result.data.token;
                   that.$session.set("currentToken", that.currentToken);
                   that.$router.push({ path: "/" }); // to be changed later
-                  this.processingData = false;
+                  this.processingLogin = false;
                   this.loginText = "Login";
                 }
+              } else if(result.status === 400) {
+                if(result.data.error === "invalid_credentials") {
+                  /* UI to show data is precessing will be here */
+                  this.processingLogin = false;
+                  this.loginText = "Login";
+                }
+
               } // else part to be included here later when some things are clearer
             })
             .catch(error => {
               if (error.status > 299) {
-                that.processingData = false;
+                that.processingLogin = false;
               }
             });
         }

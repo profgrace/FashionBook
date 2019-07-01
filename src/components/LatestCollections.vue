@@ -3,17 +3,17 @@
     <v-flex xs12>
       <span class="title mb-3">Latest Collections</span>
     </v-flex>
-    <v-flex sm6 xs12 mb-4 v-for="(item,i) in products" :key="i">
+    <v-flex sm6 xs12 mb-4 v-for="(item,i) in allProducts" :key="i">
       <v-card flat tile class="collection">
         <v-layout row wrap class="pictures">
           <v-flex xs9 class="main-pic">
             <router-link to="/subcategory">
-              <img :src="item.mainPic" alt="Product Image">
+              <img :src="item.type" alt="Product Image">
             </router-link>
           </v-flex>
           <v-flex xs3 class="other-pics">
-            <div class="text-xs-center" v-for="(smallitem,i) in item.others" :key="i">
-              <img :src="smallitem.src" alt="Other Product Pictures">
+            <div class="text-xs-center" v-for="(smallitem,i) in item.main_image" :key="i">
+              <img :src="smallitem.main_image" alt="Other Product Pictures">
             </div>
           </v-flex>
         </v-layout>
@@ -25,14 +25,14 @@
             <p>{{item.description}}</p>
           </v-flex>
           <v-flex xs3 class="pt-3 pl-2">
-            <div class="mb-4">20 items</div>
+            <div class="mb-4">{{item.total_item}}</div>
             <router-link to="/subcategory" class="link">Check them out</router-link>
           </v-flex>
         </v-layout>
       </v-card>
     </v-flex>
     <v-flex xs12 text-xs-center mt-3>
-      <v-btn color="btncolor" class="submit-btn">More</v-btn>
+      <v-btn color="btncolor" :disabled="processingList" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
     </v-flex>
   </v-layout>
 </template>
@@ -40,6 +40,12 @@
 export default {
   data() {
     return {
+      moreText: "More",
+      processingList: false,
+      initialLimit: 2,
+      allProducts: [],
+      currentLimit: 2,
+      bearerTokenFromSession: this.$session.get("currentToken"),
       products: [
         {
           mainPic: require("../assets/products/prod1.jpg"),
@@ -94,6 +100,32 @@ export default {
         }
       ]
     };
+  },
+
+  methods: {
+    loadMore() {
+      this.currentLimit = this.currentLimit + this.initialLimit;
+      this.getAllProducts(1, this.currentLimit);
+    },
+    getAllProducts(status, limit) {
+      this.processingList = true;
+      this.moreText = "Loading...";
+      const that = this;
+      this.$store
+        .dispatch("products/allProductList", {
+          bearerToken: this.bearerTokenFromSession,
+          status: status,
+          limit: limit
+        })
+        .then(result => {
+          that.allProducts = result.data.data;
+          that.processingList = false;
+          that.moreText = "More";
+        });
+    }
+  },
+  mounted() {
+    this.getAllProducts(1, this.currentLimit);
   }
 };
 </script>
