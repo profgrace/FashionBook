@@ -567,6 +567,9 @@ footer {
 .post {
   &.container {
     margin-top: 50px !important;
+    @media (max-width: 420px) {
+      margin-top: 30px !important;
+    }
   }
   .title {
     font-size: 30px !important;

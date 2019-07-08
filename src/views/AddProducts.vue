@@ -146,7 +146,7 @@
         </v-flex>
       </v-layout>
       <v-layout row wrap justify-center>
-        <v-flex xs4 class="more" my-4>
+        <v-flex md4 xs6 class="more" my-4>
           <v-btn class="submit" color="btncolor">Save Product</v-btn>
         </v-flex>
       </v-layout>
@@ -250,6 +250,10 @@ form {
   border-radius: 10px;
   margin-top: 50px;
   padding: 50px;
+  @media (max-width: 420px) {
+    margin-top: 20px !important;
+    padding: 30px 20px;
+  }
   .subtitle {
     border-bottom: 1px solid #707070;
     display: inline-block;
