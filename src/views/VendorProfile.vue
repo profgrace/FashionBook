@@ -18,7 +18,7 @@
         <v-flex xs12>
           <v-text-field box label="Store Address"></v-text-field>
         </v-flex>
-        <v-flex xs6>
+        <v-flex md6 xs12>
           <v-btn class="submit" color="btncolor">Save Personal Details</v-btn>
         </v-flex>
         <v-flex xs12 mt-5>
@@ -38,7 +38,7 @@
         </v-flex>
       </v-layout>
       <v-layout row wrap>
-        <v-flex xs6>
+        <v-flex md6 xs12>
           <v-btn class="submit" color="btncolor">Save Password</v-btn>
         </v-flex>
       </v-layout>
@@ -68,6 +68,9 @@ h2 {
 }
 .post {
   width: 600px;
+  @media (max-width: 420px) {
+    max-width: 100%;
+  }
 }
 form {
   background-color: white;
@@ -75,6 +78,10 @@ form {
   border-radius: 10px;
   margin: 0 auto;
   padding: 50px;
+  @media (max-width: 420px) {
+    margin-top: 20px !important;
+    padding: 30px 20px;
+  }
   .subtitle {
     font-size: 14px;
     font-weight: 700;
