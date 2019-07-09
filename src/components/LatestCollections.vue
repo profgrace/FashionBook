@@ -8,11 +8,11 @@
         <v-layout row wrap class="pictures">
           <v-flex xs9 class="main-pic">
             <router-link to="/subcategory">
-              <img :src="item.type" alt="Product Image">
+              <img :src="item.main_image" alt="Product Image">
             </router-link>
           </v-flex>
           <v-flex xs3 class="other-pics">
-            <div class="text-xs-center" v-for="(smallitem,i) in item.main_image" :key="i">
+            <div class="text-xs-center" v-for="(smallitem,i) in item.other_images" :key="i">
               <img :src="smallitem.main_image" alt="Other Product Pictures">
             </div>
           </v-flex>
