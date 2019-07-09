@@ -10,7 +10,7 @@
         </v-flex>
       </v-layout>
       <v-layout row wrap mt-4>
-        <v-flex xs3 mb-3 v-for="product in products" :key="product.id">
+        <v-flex md3 xs12 mb-3 v-for="product in products" :key="product.id">
           <v-card class="unique-card">
             <img :src="product.img">
             <v-card-title primary-title class="pb-0 card-title pt-3">

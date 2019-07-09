@@ -59,9 +59,10 @@
                   {{single.location}}
                 </span>
               </v-flex>
-              <v-flex md4 xs12 class="extra-details px-4">
+              <v-flex md4 xs12 class="extra-details px-4 like">
                 <span>
-                  <v-icon color="primary">favorite_border</v-icon>
+                  <v-icon @click="single.liked = true" color="primary" v-if="!single.liked">favorite_border</v-icon>
+                  <v-icon @click="single.liked = false" color="primary" v-if="single.liked">favorite</v-icon>
                 </span>
                 <span class="price">{{single.price}}</span>
                 <div class="store">By {{single.storeName}}</div>
@@ -133,7 +134,8 @@ export default {
           color: "Burnt Red",
           location: "Lagos, Nigeria",
           price: "N 8,000.00",
-          storeName: "BeautySupplies"
+          storeName: "BeautySupplies",
+          liked: false
         },
         {
           products: [
@@ -147,7 +149,8 @@ export default {
           color: "Green",
           location: "Lagos, Nigeria",
           price: "N 10,000.00",
-          storeName: "DebbieStores"
+          storeName: "DebbieStores",
+          liked: false
         },
         {
           products: [
@@ -161,7 +164,8 @@ export default {
           color: "Green",
           location: "Lagos, Nigeria",
           price: "N 5,000.00",
-          storeName: "DebbieStores"
+          storeName: "DebbieStores",
+          liked: false
         },
         {
           products: [
@@ -175,7 +179,8 @@ export default {
           color: "Green",
           location: "Lagos, Nigeria",
           price: "N 10,000.00",
-          storeName: "DebbieStores"
+          storeName: "DebbieStores",
+          liked: false
         }
       ],
       related: [
