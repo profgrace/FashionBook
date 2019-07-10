@@ -7,7 +7,7 @@
       <v-card flat tile class="collection">
         <v-layout row wrap class="pictures">
           <v-flex xs9 class="main-pic">
-            <router-link to="/subcategory" + >
+            <router-link :to="'/subcategory/' + item.product_sub_id" >
               <img :src="item.main_image" alt="Product Image">
             </router-link>
           </v-flex>
