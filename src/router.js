@@ -20,7 +20,7 @@ export default new Router({
       component: Home
     },
     {
-      path: "/subcategory",
+      path: "/subcategory/:id",
       name: "subcategory",
       component: SubCategory
     },

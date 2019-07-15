@@ -34,5 +34,15 @@ export default {
         headers: { Authorization: bearerToken }
       }
     );
+  },
+
+  // subcategory list of products
+  subCategoryListOfProducts(baseURL, { bearerToken, status, limit, id, sort }) {
+    return axios.get(
+      `${baseURL}v1/product/ads-similar-item-list/${id}?status=${status}&limit=${limit}&sort=${sort}`,
+      {
+        headers: { Authorization: bearerToken }
+      }
+    );
   }
 };

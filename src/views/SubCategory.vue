@@ -22,7 +22,7 @@
         </v-layout>
       </v-flex>
       <v-flex pa-2 md10 xs12 class="subcategory">
-        <v-layout row wrap mb-4 class="product" v-for="(single, i) in singleProducts" :key="i">
+        <v-layout row wrap mb-4 class="product" v-for="(single, i) in allSingleProducts.ads" :key="i">
           <v-flex md3 xs12 pa-3 class="images">
             <router-link to="/single">
               <template>
@@ -34,11 +34,11 @@
                   class="slider"
                   hide-controls
                 >
-                  <v-carousel-item v-for="(product,i) in single.products" :key="i" :src="product"></v-carousel-item>
+                  <v-carousel-item v-for="(product,i) in single.other_images" :key="i" :src="single.other_images || defaultSlideImages"></v-carousel-item>
                 </v-carousel>
               </template>
               <span>
-                {{single.products.length}}
+                {{single.length}}
                 <v-icon>photo_camera</v-icon>
               </span>
             </router-link>
@@ -52,11 +52,11 @@
                 <p>{{single.description}}</p>
                 <span class="color">
                   <b>Color:</b>
-                  {{single.color}}
+                  {{single.colour}}
                 </span>
                 <span class="location">
                   <v-icon>location_on</v-icon>
-                  {{single.location}}
+                  {{single.region}}
                 </span>
               </v-flex>
               <v-flex md4 xs12 class="extra-details px-4 like">
@@ -65,7 +65,7 @@
                   <v-icon @click="single.liked = false" color="primary" v-if="single.liked">favorite</v-icon>
                 </span>
                 <span class="price">{{single.price}}</span>
-                <div class="store">By {{single.storeName}}</div>
+                <div class="store">By {{single.business_name}}</div>
               </v-flex>
             </v-layout>
           </v-flex>
@@ -77,17 +77,17 @@
       <v-flex xs12>
         <span class="title mb-3">Related Adverts</span>
       </v-flex>
-      <v-flex sm4 xs12 class="mb-4 pa-2" v-for="(product,i) in related" :key="i">
+      <v-flex sm4 xs12 class="mb-4 pa-2" v-for="(product,i) in allSingleProducts.similar_ads" :key="i">
         <a href="/">
           <v-layout row wrap class="collection">
             <v-flex xs12 class="pictures borderBtm">
               <v-layout row wrap>
                 <v-flex xs9 pa-3 class="borderRight">
-                  <img :src="product.mainPic" alt>
+                  <img :src="product.main_image" alt>
                 </v-flex>
                 <v-flex xs3>
                   <v-layout row wrap class="others">
-                    <v-flex xs12 v-for="(other,i) in product.others" :key="i">
+                    <v-flex xs12 v-for="(other,i) in product.other_images" :key="i">
                       <img :src="other" alt>
                     </v-flex>
                   </v-layout>
@@ -101,7 +101,7 @@
                   <p>{{product.description}}</p>
                 </v-flex>
                 <v-flex xs3 class="link py-5 pa-2">
-                  <span>{{related.length}} items</span>
+                  <span>{{product.length}} items</span>
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -119,7 +119,17 @@ export default {
   data() {
     return {
       sortBy: ["Newest", "Oldest"],
-      sort: "",
+      sort: "asc",
+      subCatID: this.$route.params.id,
+      allRelated: [],
+      defaultSlideImages: [
+        require("../assets/products/pic13.jpg"),
+        require("../assets/products/pic14.jpg"),
+        require("../assets/products/pic15.jpg"),
+        require("../assets/products/pic16.jpg")
+      ],
+      bearerTokenFromSession: this.$session.get("currentToken"),
+      allSingleProducts: [],
       singleProducts: [
         {
           products: [
@@ -223,6 +233,30 @@ export default {
   components: {
     Search,
     CTA
+  },
+
+  methods: {
+    getSubCategoryProducts(status, limit, id, sort) {
+      this.processingList = true;
+      this.moreText = "Loading...";
+      const that = this;
+      this.$store
+        .dispatch("subcategory/similarSubCategoryItems", {
+          bearerToken: this.bearerTokenFromSession,
+          status: status,
+          limit: limit,
+          id: id,
+          sort: sort
+        })
+        .then(result => {
+          that.allSingleProducts = result.data.data;
+          that.allRelated = result.data.data.similar_ads;
+
+        });
+    }
+  },
+  mounted() {
+    this.getSubCategoryProducts(1, 3, this.subCatID, this.sort);
   }
 };
 </script>

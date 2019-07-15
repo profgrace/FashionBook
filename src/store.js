@@ -6,6 +6,7 @@ import VueSession from "vue-session";
 import user from "./store/modules/user";
 import postad from "./store/modules/postad";
 import products from "./store/modules/products";
+import subcategory from "./store/modules/subcategory";
 
 Vue.use(VueSession);
 Vue.use(Vuex);
@@ -15,7 +16,8 @@ export default new Vuex.Store({
   modules: {
     user,
     postad,
-    products
+    products,
+    subcategory
   },
 
   state: {
