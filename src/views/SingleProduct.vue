@@ -233,51 +233,7 @@ export default {
       deliveryLocation: "N/A",
       singleProductDetails: [],
       similarAdDetails: [],
-      products: [
-        {
-          id: "1",
-          src: require("../assets/products/pic1.jpg"),
-          thumb: require("../assets/products/pic1.jpg")
-        },
-        {
-          id: "2",
-          src: require("../assets/products/pic2.jpg"),
-          thumb: require("../assets/products/pic2.jpg")
-        },
-        {
-          id: "3",
-          src: require("../assets/products/pic3.jpg"),
-          thumb: require("../assets/products/pic3.jpg")
-        }
-      ],
-      products2: [
-        {
-          src: require("../assets/products/pic13.jpg")
-        },
-        {
-          src: require("../assets/products/pic14.jpg")
-        },
-        {
-          src: require("../assets/products/pic15.jpg")
-        },
-        {
-          src: require("../assets/products/pic16.jpg")
-        }
-      ],
-      products3: [
-        {
-          src: require("../assets/products/pic17.jpg")
-        },
-        {
-          src: require("../assets/products/pic18.jpg")
-        },
-        {
-          src: require("../assets/products/pic19.jpg")
-        },
-        {
-          src: require("../assets/products/pic20.jpg")
-        }
-      ]
+      
     };
   },
   mounted() {
