@@ -47,7 +47,7 @@
             <v-layout row wrap>
               <v-flex md8 xs12 class="main-details pa-4">
                 <span class="title">
-                  <router-link to="/single">{{single.title}}</router-link>
+                  <router-link :to="'/single/' + single.fid">{{single.title}}</router-link>
                 </span>
                 <p>{{single.description}}</p>
                 <span class="color">

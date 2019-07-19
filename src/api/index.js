@@ -36,6 +36,16 @@ export default {
     );
   },
 
+  // get ad details
+  singleProductDetails(baseURL, { bearerToken, adID, status, limit }) {
+    return axios.get(
+      `${baseURL}v1/product/view-ads-detail/${adID}?status=${status}&limit=${limit}`,
+      {
+        headers: { Authorization: bearerToken }
+      }
+    );
+  },
+
   // subcategory list of products
   subCategoryListOfProducts(baseURL, { bearerToken, status, limit, id, sort }) {
     return axios.get(

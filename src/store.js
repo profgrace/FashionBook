@@ -7,6 +7,7 @@ import user from "./store/modules/user";
 import postad from "./store/modules/postad";
 import products from "./store/modules/products";
 import subcategory from "./store/modules/subcategory";
+import singleproduct from "./store/modules/singleproduct";
 
 Vue.use(VueSession);
 Vue.use(Vuex);
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     user,
     postad,
     products,
-    subcategory
+    subcategory,
+    singleproduct
   },
 
   state: {

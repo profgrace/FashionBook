@@ -25,7 +25,7 @@ export default new Router({
       component: SubCategory
     },
     {
-      path: "/single",
+      path: "/single/:id",
       name: "single",
       component: SingleProduct
     },
