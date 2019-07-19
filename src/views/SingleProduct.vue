@@ -3,12 +3,12 @@
     <Search></Search>
     <v-layout row wrap mt-5 class="meta">
       <v-flex md6 xs12 class="pagetitle">
-        <div class="title">Ladies Tote Bag</div>
+        <div class="title">{{adTitle}}</div>
         <span>
-          <v-icon>location_on</v-icon>At Ikeja GRA, Lagos.
+          <v-icon>location_on</v-icon>{{adLocation}}
         </span>
         <span>
-          <v-icon>access_time</v-icon>Posted May 23, 2018
+          <v-icon>access_time</v-icon>{{adPostDate}}
         </span>
       </v-flex>
       <v-flex md6 xs12 class="like">
@@ -27,12 +27,12 @@
           <v-layout row wrap class="images">
             <v-flex md2 xs3 class="thumbnails">
               <div
-                v-for="(image, index) in  products"
-                :key="image.id"
+                v-for="(image, index) in singleProductDetails.other_images"
+                :key="image.img_id"
                 :class="['thumbnail-image', (activeImage == index) ? 'active' : '']"
                 @click="activateImage(index)"
               >
-                <img :src="image.thumb">
+                <img :src="image.path">
               </div>
             </v-flex>
             <v-flex md10 xs9>
@@ -44,16 +44,16 @@
                 hide-controls
                 hide-delimiters
               >
-                <v-carousel-item :src="currentImage"></v-carousel-item>
+                <v-carousel-item :src="image"></v-carousel-item>
               </v-carousel>
             </v-flex>
           </v-layout>
           <v-layout row wrap class="dets">
             <v-flex xs12 class="product-about mobile">
               <div class="price mb-4">
-                <span>Price: N 8,000</span>
+                <span>Price: N {{adPrice}}</span>
               </div>
-              <div class="store">By BeautySupplies</div>
+              <div class="store">By {{business_name}}</div>
               <span>Verified</span>
               <div class="last-seen">Last seen 2 hours ago</div>
               <div class="phone mt-3">
@@ -71,38 +71,38 @@
               <div class="title">Ad Details</div>
               <p>
                 Product Name:
-                <b>Special Ladies Tote Bag</b>
+                <b>{{productName}}</b>
               </p>
               <p>
                 Category:
-                <b>Shoulder Bags</b>
+                <b>{{productCategory}}</b>
               </p>
               <p>
                 Color:
-                <b>Nude</b>
+                <b>{{productColor}}</b>
               </p>
               <p>
                 Material:
-                <b>Leather</b>
+                <b>{{productLeather}}</b>
               </p>
               <p>
                 Quantity:
-                <b>5 units</b>
+                <b>{{productQuantity}} units</b>
               </p>
               <p>
                 Weight:
-                <b>0.4 (kg)</b>
+                <b>{{productWeight}} (kg)</b>
               </p>
             </v-flex>
             <v-flex xs12 mt-4>
               <div class="title">Delivery</div>
               <p>
                 Location:
-                <b>Within Lagos</b>
+                <b>{{deliveryLocation}}</b>
               </p>
               <p>
                 Fee:
-                <b>750 naira</b>
+                <b>{{deliveryFee}}</b>
               </p>
             </v-flex>
           </v-layout>
@@ -112,7 +112,7 @@
           <v-flex xs12>
             <span class="title mb-3">Similar Adverts</span>
           </v-flex>
-          <v-layout row wrap mb-4 class="product">
+          <v-layout row wrap mb-4 class="product" v-for="(product,i) in similarAdDetails" :key="i">
             <v-flex md3 xs12 pa-3 class="images">
               <template>
                 <v-carousel
@@ -123,7 +123,7 @@
                   class="slider"
                   hide-controls
                 >
-                  <v-carousel-item v-for="(product,i) in products" :key="i" :src="product.src"></v-carousel-item>
+                  <v-carousel-item :src="product.other_images"></v-carousel-item>
                 </v-carousel>
               </template>
               <span>
@@ -134,110 +134,29 @@
             <v-flex md9 xs12 class="details">
               <v-layout row wrap>
                 <v-flex md8 xs12 class="main-details pa-4">
-                  <span class="title">Ladies' Tote bag</span>
-                  <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
+                  <span class="title">{{product.title}}</span>
+                  <p>{{product.description}}</p>
                   <span class="color">
-                    <b>Color:</b> Burnt Red
+                    <b>Color:</b> {{product.band_color}}
                   </span>
                   <span class="location">
-                    <v-icon>location_on</v-icon>Lagos, Nigeria
+                    <v-icon>location_on</v-icon>{{product.place}}, {{product.region}}
                   </span>
                 </v-flex>
                 <v-flex md4 xs12 class="extra-details px-4">
                   <span>
                     <v-icon color="primary">favorite_border</v-icon>
                   </span>
-                  <span class="price">N 8,000.00</span>
-                  <div class="store">By BeautySupplies</div>
+                  <span class="price">{{product.price}}</span>
+                  <div class="store">By {{product.business_name}}</div>
                 </v-flex>
               </v-layout>
             </v-flex>
           </v-layout>
-          <v-layout row wrap mb-4 class="product">
-            <v-flex md3 xs12 pa-3 class="images">
-              <template>
-                <v-carousel
-                  prev-icon="chevron_left"
-                  next-icon="chevron_right"
-                  hide-delimiters
-                  light
-                  class="slider"
-                  hide-controls
-                >
-                  <v-carousel-item v-for="(product,i) in products" :key="i" :src="product.src"></v-carousel-item>
-                </v-carousel>
-              </template>
-              <span>
-                {{products.length}}
-                <v-icon>photo_camera</v-icon>
-              </span>
-            </v-flex>
-            <v-flex md9 xs12 class="details">
-              <v-layout row wrap>
-                <v-flex md8 xs12 class="main-details pa-4">
-                  <span class="title">Ladies' Tote bag</span>
-                  <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
-                  <span class="color">
-                    <b>Color:</b> Burnt Red
-                  </span>
-                  <span class="location">
-                    <v-icon>location_on</v-icon>Lagos, Nigeria
-                  </span>
-                </v-flex>
-                <v-flex md4 xs12 class="extra-details px-4">
-                  <span>
-                    <v-icon color="primary">favorite_border</v-icon>
-                  </span>
-                  <span class="price">N 8,000.00</span>
-                  <div class="store">By BeautySupplies</div>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-          </v-layout>
-          <v-layout row wrap mb-4 class="product">
-            <v-flex md3 xs12 pa-3 class="images">
-              <template>
-                <v-carousel
-                  prev-icon="chevron_left"
-                  next-icon="chevron_right"
-                  hide-delimiters
-                  light
-                  class="slider"
-                  hide-controls
-                >
-                  <v-carousel-item v-for="(product,i) in products" :key="i" :src="product.src"></v-carousel-item>
-                </v-carousel>
-              </template>
-              <span>
-                {{products.length}}
-                <v-icon>photo_camera</v-icon>
-              </span>
-            </v-flex>
-            <v-flex md9 xs12 class="details">
-              <v-layout row wrap>
-                <v-flex md8 xs12 class="main-details pa-4">
-                  <span class="title">Ladies' Tote bag</span>
-                  <p>Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…</p>
-                  <span class="color">
-                    <b>Color:</b> Burnt Red
-                  </span>
-                  <span class="location">
-                    <v-icon>location_on</v-icon>Lagos, Nigeria
-                  </span>
-                </v-flex>
-                <v-flex md4 xs12 class="extra-details px-4">
-                  <span>
-                    <v-icon color="primary">favorite_border</v-icon>
-                  </span>
-                  <span class="price">N 8,000.00</span>
-                  <div class="store">By BeautySupplies</div>
-                </v-flex>
-              </v-layout>
-            </v-flex>
-          </v-layout>
+          
           <v-layout row wrap>
             <v-flex xs12 class="more text-xs-center my-5">
-              <v-btn color="btncolor">More</v-btn>
+              <v-btn color="btncolor" :disabled="processingList" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
             </v-flex>
           </v-layout>
         </v-layout>
@@ -288,61 +207,45 @@ import PostAd from "../components/CallToAction.vue";
 export default {
   data() {
     return {
+      processingList: false,
+      moreText: "More",
       phoneShow: false,
+      currentStatus: 1,
+      initialLimit: 3,
+      currentLimit: 3,
+      postDetailID: this.$route.params.id,
       liked: false,
       sortBy: ["Newest", "Oldest"],
       sort: "",
       activeImage: 0,
-      products: [
-        {
-          id: "1",
-          src: require("../assets/products/pic1.jpg"),
-          thumb: require("../assets/products/pic1.jpg")
-        },
-        {
-          id: "2",
-          src: require("../assets/products/pic2.jpg"),
-          thumb: require("../assets/products/pic2.jpg")
-        },
-        {
-          id: "3",
-          src: require("../assets/products/pic3.jpg"),
-          thumb: require("../assets/products/pic3.jpg")
-        }
-      ],
-      products2: [
-        {
-          src: require("../assets/products/pic13.jpg")
-        },
-        {
-          src: require("../assets/products/pic14.jpg")
-        },
-        {
-          src: require("../assets/products/pic15.jpg")
-        },
-        {
-          src: require("../assets/products/pic16.jpg")
-        }
-      ],
-      products3: [
-        {
-          src: require("../assets/products/pic17.jpg")
-        },
-        {
-          src: require("../assets/products/pic18.jpg")
-        },
-        {
-          src: require("../assets/products/pic19.jpg")
-        },
-        {
-          src: require("../assets/products/pic20.jpg")
-        }
-      ]
+      adTitle: "",
+      adLocation: "",
+      adPostDate: "",
+      deliveryFee: "N/A",
+      adPrice: null,
+      business_name: "",
+      productName: "",
+      productCategory: "N/A",
+      productColor: "",
+      productLeather: "N/A",
+      productQuantity: "N/A",
+      productWeight: "N/A",
+      deliveryLocation: "N/A",
+      singleProductDetails: [],
+      similarAdDetails: [],
+      
     };
+  },
+  mounted() {
+    this.getSingleProductDetail(this.postDetailID, this.currentLimit, this.currentStatus);
   },
   methods: {
     showMerchantPhone() {
       alert("Works!");
+    },
+    loadMore() {
+      this.currentLimit = this.currentLimit + this.initialLimit;
+      this.getSingleProductDetail(this.postDetailID, this.currentLimit, this.currentStatus);
     },
     nextImage() {
       var active = this.activeImage + 1;
@@ -362,11 +265,38 @@ export default {
     },
     activateImage(imageIndex) {
       this.activeImage = imageIndex;
+    },
+    getSingleProductDetail(adID, status, limit) {
+      this.processingList = true;
+      this.moreText = "Loading...";
+      const that = this;
+      this.$store
+        .dispatch("singleproduct/getSingleProductDetail", {
+          bearerToken: this.bearerTokenFromSession,
+          adID: adID,
+          status: status,
+          limit: limit
+        })
+        .then(result => {
+          that.singleProductDetails = result.data.data[0];
+          that.similarAdDetails = result.data.data[0].similar_ads;
+          that.processingList = false;
+          that.moreText = "More";
+          that.adTitle = that.singleProductDetails.title;
+          that.adLocation = that.singleProductDetails.region;
+          that.adPostDate = that.singleProductDetails.created_at;
+          that.adPrice = that.singleProductDetails.price;
+          that.business_name = that.singleProductDetails.business_name;
+          that.productName = that.singleProductDetails.title,
+          that.productColor = that.singleProductDetails.colour;
+          that.productLeather = that.singleProductDetails.band_material;
+          that.deliveryLocation = that.singleProductDetails.target_area;
+        });
     }
   },
   computed: {
     currentImage() {
-      return this.products[this.activeImage].src;
+      return this.singleProductDetails[this.activeImage].src;
     }
   },
   components: {

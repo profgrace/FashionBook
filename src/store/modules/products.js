@@ -5,10 +5,19 @@ const actions = {
   // view ads detail
   async postedAdInformation({ rootState }, { bearerToken, status }) {
     const postedAdInfoResponse = await api.postedAdInfo(
-      rootState.$appConfigLocal,
+      rootState.$appConfig,
       { bearerToken, status }
     );
     return postedAdInfoResponse;
+  },
+
+  //Queue for all products
+  async allProductList({ rootState }, { bearerToken, status, limit }) {
+    const allProductListResponse = await api.postedProductList(
+      rootState.$appConfig,
+      { bearerToken, status, limit }
+    );
+    return allProductListResponse;
   }
 };
 
