@@ -34,7 +34,9 @@
                   class="slider"
                   hide-controls
                 >
-                  <v-carousel-item v-for="(product,i) in single.other_images" :key="i" :src="single.other_images || defaultSlideImages"></v-carousel-item>
+                  <v-carousel-item v-for="(item, i) in single.other_images" :key = "i" >
+                    <v-img contain :src="item.path"></v-img>
+                  </v-carousel-item>
                 </v-carousel>
               </template>
               <span>
@@ -88,7 +90,7 @@
                 <v-flex xs3>
                   <v-layout row wrap class="others">
                     <v-flex xs12 v-for="(other,i) in product.other_images" :key="i">
-                      <img :src="other" alt>
+                      <img :src="other.path" alt>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -122,112 +124,8 @@ export default {
       sort: "asc",
       subCatID: this.$route.params.id,
       allRelated: [],
-      defaultSlideImages: [
-        require("../assets/products/pic13.jpg"),
-        require("../assets/products/pic14.jpg"),
-        require("../assets/products/pic15.jpg"),
-        require("../assets/products/pic16.jpg")
-      ],
       bearerTokenFromSession: this.$session.get("currentToken"),
-      allSingleProducts: [],
-      singleProducts: [
-        {
-          products: [
-            require("../assets/products/pic13.jpg"),
-            require("../assets/products/pic14.jpg"),
-            require("../assets/products/pic15.jpg"),
-            require("../assets/products/pic16.jpg")
-          ],
-          title: "Ladies' Tote bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Burnt Red",
-          location: "Lagos, Nigeria",
-          price: "N 8,000.00",
-          storeName: "BeautySupplies",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic1.jpg"),
-            require("../assets/products/pic2.jpg"),
-            require("../assets/products/pic3.jpg")
-          ],
-          title: "Brown Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 10,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic19.jpg"),
-            require("../assets/products/pic3.jpg"),
-            require("../assets/products/pic2.jpg")
-          ],
-          title: "Casual Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 5,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic20.jpg"),
-            require("../assets/products/pic1.jpg"),
-            require("../assets/products/pic2.jpg")
-          ],
-          title: "Brown Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 10,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        }
-      ],
-      related: [
-        {
-          mainPic: require("../assets/products/pic1.jpg"),
-          others: [
-            require("../assets/products/pic2.jpg"),
-            require("../assets/products/pic3.jpg"),
-            require("../assets/products/pic1.jpg")
-          ],
-          title: "Designer Bags",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag"
-        },
-        {
-          mainPic: require("../assets/products/pic4.jpg"),
-          others: [
-            require("../assets/products/pic5.jpg"),
-            require("../assets/products/pic6.jpg"),
-            require("../assets/products/pic7.jpg")
-          ],
-          title: "Shoes",
-          description:
-            "Some text about this shoes just to tell some more. Some text about this designer bag"
-        },
-        {
-          mainPic: require("../assets/products/pic8.jpg"),
-          others: [
-            require("../assets/products/pic9.jpg"),
-            require("../assets/products/pic10.jpg"),
-            require("../assets/products/pic11.jpg")
-          ],
-          title: "Official Wears",
-          description:
-            "Some text about this official wears just to tell some more. Some text about this designer bag"
-        }
-      ]
+      allSingleProducts: [], 
     };
   },
   components: {
@@ -236,6 +134,7 @@ export default {
   },
 
   methods: {
+    
     getSubCategoryProducts(status, limit, id, sort) {
       this.processingList = true;
       this.moreText = "Loading...";

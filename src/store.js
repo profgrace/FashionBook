@@ -29,7 +29,6 @@ export default new Vuex.Store({
     categories: [],
     subCategories: [],
     $basicConfig: "Basic " + process.env.VUE_APP_BASIC_AUTH
-    //$bearerConfig: this.$session.get("currentToken")
   },
   actions: {
     getStates({ commit }) {

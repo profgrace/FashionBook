@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Home from "./views/Home.vue";
 import SubCategory from "./views/SubCategory.vue";
 import SingleProduct from "./views/SingleProduct.vue";
+import EditProduct from "./views/EditProduct.vue";
 import PostAd from "./views/PostAd.vue";
 import GetStarted from "./views/GetStarted.vue";
 import ProductList from "./views/VendorProducts.vue";
@@ -12,6 +13,7 @@ import VendorProfile from "./views/VendorProfile.vue";
 Vue.use(Router);
 
 export default new Router({
+  mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
@@ -28,6 +30,11 @@ export default new Router({
       path: "/single/:id",
       name: "single",
       component: SingleProduct
+    },
+    {
+      path: "/edit/:id",
+      name: "edit",
+      component: EditProduct
     },
     {
       path: "/postad",

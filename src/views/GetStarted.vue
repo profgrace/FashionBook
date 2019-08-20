@@ -191,6 +191,11 @@ export default {
       signUpText: "Sign Up"
     };
   },
+  mounted() {
+    if(this.$session.get("currentToken")) {
+      this.$router.push({ path: "/vendorprofile" });
+    }
+  },
   methods: {
 
     swapForm() {
@@ -226,11 +231,14 @@ export default {
                 } else {
                   that.currentToken = "Bearer " + result.data.token;
                   that.$session.set("currentToken", that.currentToken);
-                  that.$router.push({ path: "/" }); // to be changed later
-                  this.processingLogin = false;
-                  this.loginText = "Login";
+                  that.$session.set("userEmail", that.email);
+                  window.location.assign("/vendorprofile");
+                  //that.$router.push({ path: "/vendorprofile" }); // to be changed later
+                  that.processingLogin = false;
+                  that.loginText = "Login";
                 }
-              } else if(result.status === 400) {
+              } else {
+                console.log(status);
                 if(result.data.error === "invalid_credentials") {
                   /* UI to show data is precessing will be here */
                   this.processingLogin = false;

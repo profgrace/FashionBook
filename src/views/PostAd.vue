@@ -164,10 +164,9 @@
           <v-flex sm6 xs12>
             <v-text-field box label="Business / Personal Name" v-model="businessName"></v-text-field>
           </v-flex>
-          <v-flex sm6 xs12>
-            <v-text-field box label="Phone Number" v-model="phoneNumber"
-            v-mask="['0### ### ####', '0# ### ####']"
-            @keydown.native.space.prevent
+          <v-flex sm6 xs12 v-if="notLoggedIn">
+            <v-text-field box label="Email Address" v-model="e_Mail"
+            :rules="emailRules"
             ></v-text-field>
           </v-flex>
           <v-flex sm6 xs12>
@@ -189,10 +188,21 @@
             data-vv-as="LGA"
             ></v-autocomplete>
           </v-flex>
+          <v-flex sm6 xs12>
+            <v-text-field box label="Street Info" v-model="sellerAddress"
+            
+            ></v-text-field>
+          </v-flex>
+          <v-flex sm6 xs12>
+            <v-text-field box label="Phone Number" v-model="phoneNumber"
+            v-mask="['0### ### ####', '0# ### ####']"
+            @keydown.native.space.prevent
+            ></v-text-field>
+          </v-flex>
         </v-layout>
         <v-layout row wrap justify-center>
           <v-flex xs4 class="more" my-4>
-            <v-btn class="submit" :disabled="processingData" @click="postNewAd('postad')" color="btncolor">{{signUpText}}</v-btn>
+            <v-btn class="submit" @click="postNewAd('postad')" :disabled="processingData" color="btncolor">{{postAdButtonText}}</v-btn>
           </v-flex>
         </v-layout>
       </v-form>
@@ -213,6 +223,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import imageCompression from "browser-image-compression";
+import { NO_IMAGE_BASE64_STRING } from '../constants/settings';
 export default {
   data() {
     return {
@@ -222,27 +233,52 @@ export default {
       pic4Url: "",
       pic5Url: "",
       pic6Url: "",
+      e_Mail: this.$session.get("userEmail") || "",
+      notLoggedIn: true,
+      emailRules:[],
+      otherAdImagesArray: [],
+      image_1: NO_IMAGE_BASE64_STRING,
+      image_2: NO_IMAGE_BASE64_STRING,
+      image_3: NO_IMAGE_BASE64_STRING,
+      image_4: NO_IMAGE_BASE64_STRING,
+      image_5: NO_IMAGE_BASE64_STRING,
+      image_6: NO_IMAGE_BASE64_STRING,
       lga: "",
       state: "",
+      fields_not_filled: true,
       actionDialog: false,
       processingData: false,
-      signUpText: "Post Ad",
+      postAdButtonText: "Post Ad",
       selectedCategory: null,
       selectedSubCategory: null,
-      title: "",
-      description: "",
+      title: null,
+      description: null,
       gender: "N/A",
       type: "N/A",
       colour: "N/A",
       price: null,
       phoneNumber: null,
-      contactName: "",
+      contactName: null,
       isNegotiable: false,
-      merchantID: "",
-      sellerAddress: "",
-      businessName: "",
-      actionMsg: ""
+      merchantID: null,
+      sellerAddress: null,
+      businessName: null,
+      actionMsg: null
     };
+  },
+  watch: {
+    e_Mail: function (mail) { // e_Mail is the exact name used in v-model
+        if (mail !== '') {
+            this.emailRules = [ v => (v.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) || 'Invalid Email address']
+        } else if (mail === '') {
+            this.emailRules = []
+        }
+    },
+    fields_not_filled: function() {
+      if(pic1Url == '' || contactName == null || phoneNumber == null || price == null || title == null || description == null || sellerAddress == null || businessName == null || selectedCategory == null || selectedSubCategory == null) {
+        return false
+      }
+    }
   },
   created() {
     this.$store.dispatch("getStates");
@@ -257,6 +293,11 @@ export default {
       subCategoryLists: "subCategoryLists"
     })
   },
+  mounted() {
+    if(this.$session.get("userEmail")) {
+      this.notLoggedIn = false;
+    }
+  },
   methods: {
     postNewAd(scope) {
       let that = this;
@@ -269,8 +310,8 @@ export default {
         isNegotiableNum = 1;
       }
       const newPostData = {
-        category_id: categoryToPost,
-        sub_category: this.selectedSubCategory,
+        category_id: 2,//categoryToPost,
+        sub_category: 2,//this.selectedSubCategory,
         title: this.title,
         description: this.description,
         gender: this.gender,
@@ -279,42 +320,36 @@ export default {
         price: this.price,
         phone: this.phoneNumber,
         contact_name: this.contactName,
-        region: stateToPost,
-        place: this.lga,
+        region: "Lagos",//stateToPost,
+        place: "Agege",//this.lga,
         isnogiatiable: isNegotiableNum,
-        merchant_id: this.merchantID,
+        merchant_id: this.e_Mail,
         seller_address: this.sellerAddress,
-        main_image: "", //this.pic1Url,
+        main_image: this.image_1, 
         other_image: [
-          {
-            image_1: "" //this.pic2Url
-          },
-          {
-            image_2: ""
-          },
-          {
-            image_3: ""
-          },
-          {
-            image_4: ""
-          }
+          this.image_2,
+          this.image_3,
+          this.image_4,
+          this.image_5,
+          this.image_6
         ],
         business_name: this.businessName
       };
+      console.log(newPostData);
       this.$validator.validateAll(scope).then(result => {
         if (result) {
           this.processingData = true;
-          this.signUpText = "Processing...";
+          this.postAdButtonText = "Processing...";
           this.$store
             .dispatch("postad/postFreeAd", newPostData)
             .then(result => {
               if (result.status === 200) {
                 if (result.data.error) {
                   /* UI to show data is precessing will be here */
-                  this.signUpText = "Post Ad";
+                  this.postAdButtonText = "Post Ad";
                   this.processingData = false;
                 } else {
-                  this.signUpText = "Post Ad";
+                  this.postAdButtonText = "Post Ad";
                   this.processingData = false;
                   this.actionMsg = result.data.message;
                   this.actionDialog = true;
@@ -374,16 +409,22 @@ export default {
           fileReader.addEventListener("load", () => {
             if (event.target.id === "image1") {
               __this.pic1Url = fileReader.result;
+              __this.image_1 = __this.pic1Url;
             } else if (event.target.id === "image2") {
               __this.pic2Url = fileReader.result;
+              __this.image_2 = __this.pic2Url;
             } else if (event.target.id === "image3") {
               __this.pic3Url = fileReader.result;
+              __this.image_3 = __this.pic3Url;
             } else if (event.target.id === "image4") {
               __this.pic4Url = fileReader.result;
+              __this.image_4 = __this.pic4Url;
             } else if (event.target.id === "image5") {
               __this.pic5Url = fileReader.result;
+              __this.image_5 = __this.pic5Url;
             } else if (event.target.id === "image6") {
               __this.pic6Url = fileReader.result;
+              __this.image_6 = __this.pic6Url;
             }
           });
           fileReader.readAsDataURL(compressedFile);

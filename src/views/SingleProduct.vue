@@ -13,11 +13,11 @@
       </v-flex>
       <v-flex md6 xs12 class="like">
         <span>
-          <v-icon @click="liked = true" color="primary" v-if="!liked">favorite_border</v-icon>
-          <v-icon @click="liked = false" color="primary" v-if="liked">favorite</v-icon>
+          <v-icon @click="handleLike()" color="primary" v-if="!liked">favorite_border</v-icon>
+          <v-icon @click="handleLike()" color="primary" v-if="liked">favorite</v-icon>
         </span>
         <span>
-          <b>34 people</b> already like this
+          <b>{{productLikes}} people</b> already like this
         </span>
       </v-flex>
     </v-layout>
@@ -44,7 +44,10 @@
                 hide-controls
                 hide-delimiters
               >
-                <v-carousel-item :src="image"></v-carousel-item>
+                
+                <v-carousel-item v-for="(item, i) in singleProductDetails.other_images" :key = "i" >
+                    <v-img contain :src="item.path"></v-img>
+                  </v-carousel-item>
               </v-carousel>
             </v-flex>
           </v-layout>
@@ -54,15 +57,15 @@
                 <span>Price: N {{adPrice}}</span>
               </div>
               <div class="store">By {{business_name}}</div>
-              <span>Verified</span>
-              <div class="last-seen">Last seen 2 hours ago</div>
+              <span>{{verified}}</span>
+              <div class="last-seen">Last seen: {{updated_at}}</div>
               <div class="phone mt-3">
                 <span v-if="!phoneShow">080 xxx</span>
                 <span class="show" @click="phoneShow = true" v-if="!phoneShow">Show Phone</span>
-                <span v-if="phoneShow">081 234 5678</span>
+                <span v-if="phoneShow">{{businessPhone}}</span>
               </div>
               <div class="talk">
-                <v-btn color="success">
+                <v-btn color="success" @click="makeCall()">
                   <img src="../assets/icons/whatsapp.png" alt> Talk to Seller
                 </v-btn>
               </div>
@@ -123,11 +126,14 @@
                   class="slider"
                   hide-controls
                 >
-                  <v-carousel-item :src="product.other_images"></v-carousel-item>
+                  
+                  <v-carousel-item v-for="(item, i) in product.other_images" :key="i" >
+                    <v-img contain :src="item.path"></v-img>
+                  </v-carousel-item>
                 </v-carousel>
               </template>
               <span>
-                {{products.length}}
+                {{product.other_images.length}}
                 <v-icon>photo_camera</v-icon>
               </span>
             </v-flex>
@@ -137,7 +143,7 @@
                   <span class="title">{{product.title}}</span>
                   <p>{{product.description}}</p>
                   <span class="color">
-                    <b>Color:</b> {{product.band_color}}
+                    <b>Color:</b> {{product.colour}}
                   </span>
                   <span class="location">
                     <v-icon>location_on</v-icon>{{product.place}}, {{product.region}}
@@ -165,18 +171,18 @@
         <v-layout row wrap ml-4>
           <v-flex xs12 class="product-about">
             <div class="price mb-4">
-              <span>N 8,000</span>
+              <span>N {{adPrice}}</span>
             </div>
             <div class="store">By BeautySupplies</div>
-            <span>Verified</span>
-            <div class="last-seen">Last seen 2 hours ago</div>
+            <span>{{verified}}</span>
+            <div class="last-seen">Last seen {{updated_at}}</div>
             <div class="phone mt-3">
               <span v-if="!phoneShow">080 xxx</span>
               <span class="show" @click="phoneShow = true" v-if="!phoneShow">Show Phone</span>
-              <span v-if="phoneShow">081 234 5678</span>
+              <span v-if="phoneShow">{{businessPhone}}</span>
             </div>
             <div class="talk">
-              <v-btn color="success">
+              <v-btn color="success" @click="makeCall()">
                 <img src="../assets/icons/whatsapp.png" alt> Talk to Seller
               </v-btn>
             </div>
@@ -201,6 +207,7 @@
     </v-layout>
   </v-container>
 </template>
+
 <script>
 import Search from "../components/Search.vue";
 import PostAd from "../components/CallToAction.vue";
@@ -211,8 +218,10 @@ export default {
       moreText: "More",
       phoneShow: false,
       currentStatus: 1,
+      verified: "",
       initialLimit: 3,
       currentLimit: 3,
+      productLikes: 1,
       postDetailID: this.$route.params.id,
       liked: false,
       sortBy: ["Newest", "Oldest"],
@@ -224,6 +233,7 @@ export default {
       deliveryFee: "N/A",
       adPrice: null,
       business_name: "",
+      businessPhone: "",
       productName: "",
       productCategory: "N/A",
       productColor: "",
@@ -232,14 +242,59 @@ export default {
       productWeight: "N/A",
       deliveryLocation: "N/A",
       singleProductDetails: [],
+      updated_at: "",
       similarAdDetails: [],
-      
+      deviceID: navigator.platform,
+      deviceAgent: navigator.userAgent,
+      like: 1
     };
   },
   mounted() {
     this.getSingleProductDetail(this.postDetailID, this.currentLimit, this.currentStatus);
+    this.getProductLikes();
   },
   methods: {
+    makeCall() {
+      window.location.assign("tel://" + this.businessPhone);
+    },
+    handleLike() {
+      const that = this;
+      const likeData = {
+        "product_id": this.postDetailID,
+        "device_user_agent": this.deviceAgent,
+        "device_id": this.deviceID,
+        "like": this.like
+      }
+      console.log(likeData);
+      this.$store.dispatch("products/likeProduct",
+        {
+          bearerToken: this.$session.get("currentToken"),
+          payload: likeData
+        }
+      )
+      .then(result => {
+          if(result.data.data === 1) {
+            that.like = 0;
+            that.liked = true;
+          } else {
+            that.like = 1;
+            that.liked = false;
+          }
+          that.getProductLikes();
+        });
+    },
+    getProductLikes() {
+      const that = this;
+      this.$store
+        .dispatch("products/getProductLikes", {
+          bearerToken: this.$session.get("currentToken"),
+          param: this.postDetailID
+        })
+        .then(result => {
+          that.productLikes = result.data.data;
+          console.log(that.productLikes);
+        });
+    },
     showMerchantPhone() {
       alert("Works!");
     },
@@ -291,6 +346,8 @@ export default {
           that.productColor = that.singleProductDetails.colour;
           that.productLeather = that.singleProductDetails.band_material;
           that.deliveryLocation = that.singleProductDetails.target_area;
+          that.businessPhone = that.singleProductDetails.phone;
+          that.updated_at = that.singleProductDetails.updated_at;
         });
     }
   },

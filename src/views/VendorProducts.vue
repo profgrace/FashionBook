@@ -4,15 +4,17 @@
       <v-layout row wrap>
         <v-flex xs6>
           <h2>Products</h2>
+          <p class="loading"><img v-if="!productsLoaded" src="../assets/products/loading.gif"></p>
+          
         </v-flex>
         <v-flex xs6 class="text-xs-right">
-          <v-btn color="btncolor" class="text-none submit">Add a Product</v-btn>
+          <v-btn color="btncolor" class="text-none submit" :to="'/postad'">Add a Product</v-btn>
         </v-flex>
       </v-layout>
       <v-layout row wrap mt-4>
-        <v-flex md3 xs12 mb-3 v-for="product in products" :key="product.id">
+        <v-flex md3 xs12 mb-3 v-for="product in vendorProducts" :key="product.fid">
           <v-card class="unique-card">
-            <img :src="product.img">
+            <img :src="product.main_image">
             <v-card-title primary-title class="pb-0 card-title pt-3">
               <h4 class="mb-0">
                 <a class="darkgrey--text">{{product.title}}</a>
@@ -26,7 +28,7 @@
                 </v-flex>
                 <v-flex xs6>
                   <h5 class="text-xs-right">
-                    <b>Qty: {{product.quantity}}</b>
+                    <b>Type: {{product.type}}</b>
                   </h5>
                 </v-flex>
               </v-layout>
@@ -35,7 +37,7 @@
             <v-card-actions class="px-3 pt-0 pb-4 card-actions">
               <v-layout row wrap>
                 <v-flex xs6>
-                    <v-btn color="secondary" small>Edit <v-icon>edit</v-icon></v-btn>
+                    <v-btn color="secondary" :to="'/edit/' + product.fid" small>Edit <v-icon>edit</v-icon></v-btn>
                 </v-flex>
                 <v-flex xs6 text-xs-right>
                     <v-btn color="primary" small outline>Delete <v-icon>delete</v-icon></v-btn>
@@ -52,6 +54,8 @@
 export default {
   data() {
     return {
+      vendorProducts:[],
+      productsLoaded: false,
       products: [
         {
           id: 132243434,
@@ -118,6 +122,29 @@ export default {
         }
       ]
     };
+  },
+  methods: {
+    getMerchantAds() {
+      const that = this;
+      this.$store
+        .dispatch("user/getMerchantAds", {
+          bearerToken: this.$session.get("currentToken"),
+          email: this.$session.get("userEmail")
+        })
+        .then(result => {
+          that.vendorProducts = result.data.data;
+          console.log(that.vendorProducts);
+          that.productsLoaded = true;
+        });
+    },
+  },
+  mounted() {
+    if(!this.$session.get("currentToken")) {
+      this.$router.push({ path: "/" });
+    } else {
+      this.getMerchantAds();
+    }
+    
   }
 };
 </script>
