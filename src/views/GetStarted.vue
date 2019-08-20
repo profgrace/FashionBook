@@ -82,7 +82,8 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 class="more" my-4>
-              <v-btn type="submit" :disabled="processingData || agreeToTerms" class="submit" color="btncolor">{{ signUpText }}</v-btn>
+              
+              <v-btn type="submit" :disabled="processingData || agreeToTerms == false || regEmail == '' || regFirstName == '' || regLastName == '' || regPhoneNumber == '' || regPassword == ''" class="submit" color="btncolor">{{ signUpText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
               <v-btn flat @click="swapForm" class="text-none swapBtn">Already have an account? Log in</v-btn>
@@ -125,7 +126,7 @@
           </v-layout>
           <v-layout row wrap justify-center>
             <v-flex xs12 class="more" my-4>
-              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingLogin">{{ loginText }}</v-btn>
+              <v-btn type="submit" class="submit" color="btncolor" :disabled="processingLogin || email == '' || password == ''">{{ loginText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
               <v-btn flat @click="swapFormRegister" class="text-none swapBtn">Don't have an account yet? Sign up</v-btn>
