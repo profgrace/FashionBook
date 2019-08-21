@@ -44,7 +44,6 @@ const actions = {
       return updateProductInfoResponse;
     },
   
-
   //Queue for all products
   async allProductList({ rootState }, { bearerToken, status, limit }) {
     const allProductListResponse = await api.postedProductList(
@@ -52,7 +51,17 @@ const actions = {
       { bearerToken, status, limit }
     );
     return allProductListResponse;
+  },
+
+  //Queue for search products
+  async resultList({ rootState }, { bearerToken, title, page }) {
+    const allProductListResponse = await api.searchProduct(
+      rootState.$appConfig,
+      { bearerToken, title, page }
+    );
+    return allProductListResponse;
   }
+  
 };
 
 export default {

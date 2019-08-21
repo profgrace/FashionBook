@@ -13,6 +13,9 @@ import VueSession from "vue-session";
 import IdleVue from "idle-vue";
 // import Toastr
 import VueToastr from "vue-toastr";
+import VuePaginateAl from 'vue-paginate-al';
+ 
+Vue.component('vue-paginate-al', VuePaginateAl)
 
 // Register plugin
 Vue.use(VueToastr, {

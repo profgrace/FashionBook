@@ -10,7 +10,7 @@
     <v-layout row wrap class="sort">
       <v-spacer></v-spacer>
       <v-flex md2 xs6 d-flex>
-        <v-select solo :items="sortBy" v-model="sort" label="Sort By"></v-select>
+        <v-select solo :items="sortBy" @input="sortProducts" v-model="sort" label="Sort By"></v-select>
       </v-flex>
     </v-layout>
     <v-layout row wrap mt-4>
@@ -71,7 +71,11 @@
               </v-flex>
             </v-layout>
           </v-flex>
+          
         </v-layout>
+        <v-flex xs12 text-xs-center mt-3>
+            <v-btn color="btncolor" :disabled="processingList" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
+          </v-flex>
       </v-flex>
     </v-layout>
     <CTA></CTA>
@@ -103,7 +107,7 @@
                   <p>{{product.description}}</p>
                 </v-flex>
                 <v-flex xs3 class="link py-5 pa-2">
-                  <span>{{product.length}} items</span>
+                  <router-link :to="'/subcategory/' + product.product_sub_id"><span>{{product.total_image}} items</span></router-link>
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -120,12 +124,16 @@ import CTA from "../components/CallToAction.vue";
 export default {
   data() {
     return {
+      moreText: "More",
       sortBy: ["Newest", "Oldest"],
-      sort: "asc",
+      sort: "desc",
       subCatID: this.$route.params.id,
       allRelated: [],
       bearerTokenFromSession: this.$session.get("currentToken"),
       allSingleProducts: [], 
+      currentLimit: 5,
+      initialLimit: 5,
+      processingList: false
     };
   },
   components: {
@@ -134,7 +142,20 @@ export default {
   },
 
   methods: {
-    
+    loadMore() {
+      this.currentLimit = this.currentLimit + this.initialLimit;
+      this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, this.sort);
+    },
+    sortProducts(event) {
+      console.log(event);
+      if(event == "Newest") {
+        this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, "desc");
+        this.sort = "desc";
+      } else {
+        this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, "asc");
+        this.sort = "asc";
+      }
+    },
     getSubCategoryProducts(status, limit, id, sort) {
       this.processingList = true;
       this.moreText = "Loading...";
@@ -150,12 +171,13 @@ export default {
         .then(result => {
           that.allSingleProducts = result.data.data;
           that.allRelated = result.data.data.similar_ads;
-
+          that.moreText = "More";
+          that.processingList = false;
         });
     }
   },
   mounted() {
-    this.getSubCategoryProducts(1, 3, this.subCatID, this.sort);
+    this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, this.sort);
   }
 };
 </script>

@@ -16,7 +16,7 @@
           <v-text-field v-model="type" box label="Type" required></v-text-field>
         </v-flex>
         <v-flex xs12>
-          <v-text-field v-model="seller_address" box label="Street Info" required></v-text-field>
+          <v-text-field :value="seller_address" v-model="seller_address" box label="Street Info" required></v-text-field>
         </v-flex>
         <v-flex xs12>
           <v-text-field v-model="business_name" box label="Business Name" required></v-text-field>
@@ -37,7 +37,8 @@
             ></v-text-field>
         </v-flex>
         <v-flex md6 xs12>
-          <v-btn :disabled="processingData" class="submit" color="btncolor" @click="update">{{updateButtonText}}</v-btn>
+          
+          <v-btn  :disabled="processingData || title == null || colour == null || type == null || seller_address == null || business_name == null || description == null || price == null || phone == null || contact == null" class="submit" color="btncolor" @click="update">{{updateButtonText}}</v-btn>
         </v-flex>
       </v-layout>
     </v-form>
@@ -68,16 +69,16 @@ export default {
       processingData: false,
       updateButtonText: "Save Details",
       singleProductDetails: null,
-        product_id: "",
-        title : "",
-        colour: "",
-        type: "",
-        seller_address: "",
-        business_name: "",
-        description: "",
+        product_id: null,
+        title : null,
+        colour: null,
+        type: null,
+        seller_address: null,
+        business_name: null,
+        description: null,
         price: null,
-        phone: "",
-        contact: "",
+        phone: null,
+        contact: null,
         region: null,
         place: null
     };
@@ -101,8 +102,15 @@ export default {
         })
         .then(result => {
           that.singleProductDetails = result.data.data[0];
-          console.log(that.singleProductDetails);
-          
+            that.title = that.singleProductDetails.title;
+            that.colour = that.singleProductDetails.colour;
+            that.type = that.singleProductDetails.type;
+            that.seller_address = that.singleProductDetails.seller_address;
+            that.business_name = that.singleProductDetails.business_name;
+            that.description = that.singleProductDetails.description;
+            that.price = that.singleProductDetails.price;
+            that.phone = that.singleProductDetails.phone;
+            that.contact = that.singleProductDetails.contact
         });
     },
     update: function(scope) {
@@ -148,7 +156,7 @@ export default {
               }
             } else {
               that.actionMsg = "Error processing request";
-                that.actionDialog = true;
+              that.actionDialog = true;
             }
               
             });

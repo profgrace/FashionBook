@@ -9,7 +9,7 @@
           </v-flex>
           <v-flex xs12 md6>
             <v-autocomplete box :items="categories" v-model="selectedCategory"
-              @change="fetchSubCategories(selectedCategory)"
+              @input="fetchSubCategories"
              label="Choose Category"></v-autocomplete>
           </v-flex>
           <v-flex xs12 md6>
@@ -173,7 +173,7 @@
             <v-autocomplete box :items="states" label="State"
             v-model="state"
             :error-messages="errors.collect('state')"
-            @change="fetchLGAs(state)"
+            @input="fetchLGAs"
             data-vv-name="state"
             data-vv-as="State"
             ></v-autocomplete>
@@ -201,6 +201,9 @@
           </v-flex>
         </v-layout>
         <v-layout row wrap justify-center>
+          <v-flex xs12 v-if="updateErrorExist">
+            <p class="errorClass">{{updateErrorText}}</p>
+          </v-flex>
           <v-flex xs4 class="more" my-4>
             <v-btn class="submit" @click="postNewAd('postad')" :disabled="processingData" color="btncolor">{{postAdButtonText}}</v-btn>
           </v-flex>
@@ -236,6 +239,7 @@ export default {
       e_Mail: this.$session.get("userEmail") || "",
       notLoggedIn: true,
       emailRules:[],
+      updateErrorExist: false,
       otherAdImagesArray: [],
       image_1: NO_IMAGE_BASE64_STRING,
       image_2: NO_IMAGE_BASE64_STRING,
@@ -259,6 +263,7 @@ export default {
       price: null,
       phoneNumber: null,
       contactName: null,
+      updateErrorText: "",
       isNegotiable: false,
       merchantID: null,
       sellerAddress: null,
@@ -297,72 +302,84 @@ export default {
     if(this.$session.get("userEmail")) {
       this.notLoggedIn = false;
     }
+    this.fetchSubCategories(this.selectedCategory);
+    
   },
   methods: {
     postNewAd(scope) {
+      this.processingData = true;
       let that = this;
-      const reformedState = this.state.split("-");
-      const stateToPost = reformedState[1];
-      const reformedCategory = this.state.split("-");
-      const categoryToPost = reformedCategory[0];
-      let isNegotiableNum = 0;
-      if (this.isNegotiable === true) {
-        isNegotiableNum = 1;
-      }
-      const newPostData = {
-        category_id: 2,//categoryToPost,
-        sub_category: 2,//this.selectedSubCategory,
-        title: this.title,
-        description: this.description,
-        gender: this.gender,
-        type: this.type,
-        colour: this.colour,
-        price: this.price,
-        phone: this.phoneNumber,
-        contact_name: this.contactName,
-        region: "Lagos",//stateToPost,
-        place: "Agege",//this.lga,
-        isnogiatiable: isNegotiableNum,
-        merchant_id: this.e_Mail,
-        seller_address: this.sellerAddress,
-        main_image: this.image_1, 
-        other_image: [
-          this.image_2,
-          this.image_3,
-          this.image_4,
-          this.image_5,
-          this.image_6
-        ],
-        business_name: this.businessName
-      };
-      console.log(newPostData);
-      this.$validator.validateAll(scope).then(result => {
-        if (result) {
-          this.processingData = true;
-          this.postAdButtonText = "Processing...";
-          this.$store
-            .dispatch("postad/postFreeAd", newPostData)
-            .then(result => {
-              if (result.status === 200) {
-                if (result.data.error) {
-                  /* UI to show data is precessing will be here */
-                  this.postAdButtonText = "Post Ad";
-                  this.processingData = false;
-                } else {
-                  this.postAdButtonText = "Post Ad";
-                  this.processingData = false;
-                  this.actionMsg = result.data.message;
-                  this.actionDialog = true;
-                }
-              } // else part to be included here later when some things are clearer
-            })
-            .catch(error => {
-              if (error.status > 299) {
-                that.processingData = false;
-              }
-            });
+      if(this.pic1Url == '' || this.phoneNumber == null || this.price == null || this.title == null || this.description == null || this.sellerAddress == null || this.businessName == null || this.selectedCategory == null || this.selectedSubCategory == null ) {
+        this.updateErrorExist = true;
+        this.processingData = false;
+        this.updateErrorText = "Please fill all fields and upload at least one image of your product";
+      } else {
+        this.updateErrorExist = false;
+        const reformedState = this.state.split("-");
+        const stateToPost = reformedState[0];
+        const reformedCategory = this.selectedCategory.split("-");
+        const categoryToPost = reformedCategory[0];
+        let isNegotiableNum = 0;
+        if (this.isNegotiable === true) {
+          isNegotiableNum = 1;
         }
-      });
+        const newPostData = {
+          category_id: parseInt(categoryToPost),
+          sub_category: this.selectedSubCategory,
+          title: this.title,
+          description: this.description,
+          gender: this.gender,
+          type: this.type,
+          colour: this.colour,
+          price: this.price,
+          phone: this.phoneNumber,
+          contact_name: this.businessName,
+          region: parseInt(stateToPost),
+          place: this.lga,
+          isnogiatiable: isNegotiableNum,
+          merchant_id: this.e_Mail,
+          seller_address: this.sellerAddress,
+          main_image: this.image_1, 
+          other_image: [
+            this.image_2,
+            this.image_3,
+            this.image_4,
+            this.image_5,
+            this.image_6
+          ],
+          business_name: this.businessName
+        };
+        
+        this.$validator.validateAll(scope).then(result => {
+          console.log(newPostData);
+          if (result) {
+            this.processingData = true;
+            this.postAdButtonText = "Processing...";
+            this.$store
+              .dispatch("postad/postFreeAd", newPostData)
+              .then(result => {
+                if (result.status === 200) {
+                  if (result.data.error) {
+                    
+                    this.postAdButtonText = "Post Ad";
+                    this.processingData = false;
+                  } else {
+                    this.postAdButtonText = "Post Ad";
+                    this.processingData = false;
+                    this.actionMsg = result.data.message;
+                    this.actionDialog = true;
+                  }
+                } // else part to be included here later when some things are clearer
+              })
+              .catch(error => {
+                if (error.status > 299) {
+                  that.processingData = false;
+                }
+              });
+          } 
+        });
+      }
+      
     },
     takePic1() {
       this.$refs.productPic1.click();
@@ -434,13 +451,15 @@ export default {
     fetchStates() {
       this.getStates();
     },
-    fetchLGAs(state) {
+    fetchLGAs(event) {
+      let state = event;
       this.getLGAs({ state });
     },
     fetchCategories() {
       this.getCategories();
     },
-    fetchSubCategories(state) {
+    fetchSubCategories(event) {
+      let state = event;
       this.getSubcategories({ state });
     },
     ...mapActions(["getStates", "getLGAs"]),
@@ -454,6 +473,14 @@ export default {
   font-weight: 200;
   text-align: center;
 }
+
+.errorClass {
+    color: red;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    text-align: center;
+  }
+
 form {
   background-color: white;
   border: 1px solid #adadad;

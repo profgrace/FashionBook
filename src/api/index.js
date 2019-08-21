@@ -90,6 +90,16 @@ export default {
     );
   },
 
+  // get search results
+  searchProduct(baseURL, { bearerToken, title, page }) {
+    return axios.get(
+      `${baseURL}v1/product/search?title=${title}&page=${page}`,
+      {
+        headers: { Authorization: bearerToken }
+      }
+    );
+  },
+
   // get ad details
   singleProductDetails(baseURL, { bearerToken, adID, status, limit }) {
     return axios.get(

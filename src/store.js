@@ -57,7 +57,7 @@ export default new Vuex.Store({
           for (let i = 0; i < response.length; i++) {
             lgas.push({
               text: response[i].lga_name,
-              value: response[i].lga_name,
+              value: response[i].lga_id,
               stateid: response[i].state_id
             });
           }
@@ -81,6 +81,7 @@ export default new Vuex.Store({
     },
     getSubcategories({ commit }, { state }) {
       let subCategories = [];
+      console.log(state);
       let categoryParts = state.split("-");
       let categoryNumber = categoryParts[0];
       axios
