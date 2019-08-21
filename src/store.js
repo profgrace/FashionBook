@@ -23,7 +23,7 @@ export default new Vuex.Store({
   },
 
   state: {
-    $appConfig: process.env.VUE_APP_BASE_URI,
+    $appConfig: "https://cors-anywhere.herokuapp.com/https://api.fashionbook.ng",//process.env.VUE_APP_BASE_URI,
     states: [],
     lgas: [],
     categories: [],

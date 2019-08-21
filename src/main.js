@@ -51,8 +51,8 @@ Vue.prototype.$axios = axios;
 
 // All configurations as strings
 
-Vue.prototype.$appConfig = process.env.VUE_APP_BASE_URI;
-Vue.prototype.$appHome = process.env.VUE_APP_HOME_URI;
+Vue.prototype.$appConfig = "https://cors-anywhere.herokuapp.com/https://api.fashionbook.ng/";//process.env.VUE_APP_BASE_URI;
+Vue.prototype.$appHome = "https://fashionbook.ng/";//process.env.VUE_APP_HOME_URI;
 Vue.prototype.$authConfig = {
   withCredentials: false
 };
