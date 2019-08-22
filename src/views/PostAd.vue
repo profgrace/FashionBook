@@ -24,6 +24,12 @@
             <v-textarea box label="Description" v-model="description"></v-textarea>
           </v-flex>
           <v-flex xs12 md6>
+            <v-text-field box label="Colour" v-model="colour"></v-text-field>
+          </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field box label="Type" v-model="type"></v-text-field>
+          </v-flex>
+          <v-flex xs12 md6>
             <v-text-field box label="Price" v-model="price"
             v-mask="['########']"
             @keydown.native.space.prevent
@@ -258,8 +264,8 @@ export default {
       title: null,
       description: null,
       gender: "N/A",
-      type: "N/A",
-      colour: "N/A",
+      type: null,
+      colour: null,
       price: null,
       phoneNumber: null,
       contactName: null,
@@ -323,6 +329,19 @@ export default {
         if (this.isNegotiable === true) {
           isNegotiableNum = 1;
         }
+        let imagesToPost = [
+            this.image_2,
+            this.image_3,
+            this.image_4,
+            this.image_5,
+            this.image_6
+          ];
+          let trimmedImageList = [];
+        for(let i = 0; i < imagesToPost.length; i++) {
+          if(imagesToPost[i] !== NO_IMAGE_BASE64_STRING ) {
+            trimmedImageList.push[imagesToPost[i]];
+          }
+        }
         const newPostData = {
           category_id: parseInt(categoryToPost),
           sub_category: this.selectedSubCategory,
@@ -339,14 +358,8 @@ export default {
           isnogiatiable: isNegotiableNum,
           merchant_id: this.e_Mail,
           seller_address: this.sellerAddress,
-          main_image: this.image_1, 
-          other_image: [
-            this.image_2,
-            this.image_3,
-            this.image_4,
-            this.image_5,
-            this.image_6
-          ],
+          main_image: this.image_1,
+          other_image: trimmedImageList,
           business_name: this.businessName
         };
         
@@ -360,7 +373,6 @@ export default {
               .then(result => {
                 if (result.status === 200) {
                   if (result.data.error) {
-                    
                     this.postAdButtonText = "Post Ad";
                     this.processingData = false;
                   } else {
@@ -368,6 +380,23 @@ export default {
                     this.processingData = false;
                     this.actionMsg = result.data.message;
                     this.actionDialog = true;
+                    that.title = null;
+                    that.description = null;
+                    that.gender = null;
+                    that.type = null;
+                    that.colour = null;
+                    that.price = null;
+                    that.phoneNumber = null;
+                    that.businessName = null;
+                    that.isNegotiable = false;
+                    that.sellerAddress = null;
+                    that.selectedCategory = null;
+                    that.selectedSubCategory = null;
+                    that.businessName = null;
+                    that.state = "";
+                    that.lga = "";
+                    that.postAdButtonText = "Post Ad";
+                    that.processingData = false;
                   }
                 } // else part to be included here later when some things are clearer
               })

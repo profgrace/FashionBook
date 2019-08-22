@@ -23,7 +23,7 @@ export default new Vuex.Store({
   },
 
   state: {
-    $appConfig: process.env.VUE_APP_BASE_URI,
+    $appConfig: "http://staging-api.fashionbook.ng/",//process.env.VUE_APP_BASE_URI,
     states: [],
     lgas: [],
     categories: [],
@@ -80,7 +80,7 @@ export default new Vuex.Store({
     },
     getSubcategories({ commit }, { state }) {
       let subCategories = [];
-      console.log(state);
+
       let categoryParts = state.split("-");
       let categoryNumber = categoryParts[0];
       axios

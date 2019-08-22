@@ -25,7 +25,7 @@
             <p>{{item.description}}</p>
           </v-flex>
           <v-flex xs3 class="pt-3 pl-2">
-            <div class="mb-4">{{item.total_item}}</div>
+            <div class="mb-4">{{item.total_item}} item(s)</div>
             <router-link :to="'/subcategory/' + item.product_sub_id" class="link">Check them out</router-link>
           </v-flex>
         </v-layout>

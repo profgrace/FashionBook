@@ -208,8 +208,8 @@ export default {
       this.login = false;
     },
     navigate() {
-      this.$router.push({ path: "/" });
       this.actionDialog = false;
+      this.swapForm();
     },
     loginMerchant(scope) {
       let that = this;
@@ -257,7 +257,7 @@ export default {
       });
     },
     registerMerchant(scope) {
-      let that = this;
+      
       const loginData = {
         name: this.regFirstName + " " + this.regLastName,
         email: this.regEmail,
@@ -272,25 +272,31 @@ export default {
         if (result) {
           this.processingData = true;
           this.signUpText = "Processing...";
+          let that = this;
           this.$store
             .dispatch("user/registerMerchant", loginData)
             .then(result => {
               if (result.status === 201) {
                 if (result.data.error) {
                   /* UI to show data is precessing will be here */
-                  this.signUpText = "Sign Up";
-                  this.processingData = false;
+                  that.signUpText = "Sign Up";
+                  that.processingData = false;
                 } else {
-                  this.signUpText = "Sign Up";
-                  this.processingData = false;
-                  that.currentToken = result.data.token;
-                  that.$session.set("currentToken", that.currentToken);
-                  this.actionDialog = true;
+                  
+                  that.regEmail = null;
+                  that.regFirstName = null;
+                  that.regLastName = null;
+                  that.regPhoneNumber = null;
+                  that.regPassword = null;
+                  that.signUpText = "Sign Up";
+                  that.processingData = false;
+                  
+                  that.actionDialog = true;
                   //that.$router.push({ path: "/" }); // to be changed later
                 }
               } else if (result.status === 400) {
-                this.signUpText = "Sign Up";
-                this.processingData = false;
+                that.signUpText = "Sign Up";
+                that.processingData = false;
               }
             })
             .catch(error => {

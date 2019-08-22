@@ -17,7 +17,7 @@
           <v-icon @click="handleLike()" color="primary" v-if="liked">favorite</v-icon>
         </span>
         <span>
-          <b>{{productLikes}} people</b> already like this
+          <b>{{productLikes}} person</b> already like this
         </span>
       </v-flex>
     </v-layout>
@@ -68,6 +68,7 @@
                 <v-btn color="success" @click="makeCall()">
                   <img src="../assets/icons/whatsapp.png" alt> Talk to Seller
                 </v-btn>
+                <h4></h4>
               </div>
             </v-flex>
             <v-flex xs12 mt-5>
@@ -81,33 +82,27 @@
                 <b>{{productCategory}}</b>
               </p>
               <p>
-                Color:
-                <b>{{productColor}}</b>
+                Seller Email:
+                <b>{{sellerEmail}} </b>
               </p>
               <p>
-                Material:
-                <b>{{productLeather}}</b>
+                Seller Address:
+                <b>{{sellerAddress}} </b>
               </p>
               <p>
-                Quantity:
-                <b>{{productQuantity}} units</b>
+                Description:
+                <b>{{productDescription}} </b>
               </p>
               <p>
-                Weight:
-                <b>{{productWeight}} (kg)</b>
+                Colour:
+                <b>{{productColor}} </b>
+              </p>
+              <p>
+                Type:
+                <b>{{productType}} </b>
               </p>
             </v-flex>
-            <v-flex xs12 mt-4>
-              <div class="title">Delivery</div>
-              <p>
-                Location:
-                <b>{{deliveryLocation}}</b>
-              </p>
-              <p>
-                Fee:
-                <b>{{deliveryFee}}</b>
-              </p>
-            </v-flex>
+            
           </v-layout>
         </div>
         <PostAd class="mt-5"></PostAd>
@@ -162,7 +157,7 @@
           
           <v-layout row wrap>
             <v-flex xs12 class="more text-xs-center my-5">
-              <v-btn color="btncolor" :disabled="processingList" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
+              <v-btn color="btncolor" :disabled="processingList || similarAdDetails.length < 1" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
             </v-flex>
           </v-layout>
         </v-layout>
@@ -215,9 +210,13 @@ export default {
   data() {
     return {
       processingList: false,
+      sellerEmail: "N/A",
+      sellerAddress: "N/A",
+      productDescription: "N/A",
       moreText: "More",
       phoneShow: false,
       currentStatus: 1,
+      productType: "N/A",
       verified: "",
       initialLimit: 3,
       currentLimit: 3,
@@ -348,6 +347,10 @@ export default {
           that.deliveryLocation = that.singleProductDetails.target_area;
           that.businessPhone = that.singleProductDetails.phone;
           that.updated_at = that.singleProductDetails.updated_at;
+          that.productDescription = that.singleProductDetails.description;
+          that.sellerEmail = that.singleProductDetails.merchant_id;
+          that.sellerAddress = that.singleProductDetails.seller_address;
+          that.productType = that.singleProductDetails.type;
         });
     }
   },

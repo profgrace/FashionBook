@@ -3,7 +3,7 @@
     <Search></Search>
     <v-layout row wrap mt-5>
       <v-flex xs12 text-xs-center class="pagetitle">
-        <div class="title">Designer Bag - 100 ads</div>
+        <div class="title">{{product_cat_name}} - {{totalAds}} ads</div>
         <p>Some text about the designer bag just to tell a little bit.</p>
       </v-flex>
     </v-layout>
@@ -22,7 +22,7 @@
         </v-layout>
       </v-flex>
       <v-flex pa-2 md10 xs12 class="subcategory">
-        <v-layout row wrap mb-4 class="product" v-for="(single, i) in allSingleProducts.ads" :key="i">
+        <v-layout row wrap mb-4 class="product" v-for="(single, i) in allSingleProducts" :key="i">
           <v-flex md3 xs12 pa-3 class="images">
             <router-link to="/single">
               <template>
@@ -127,13 +127,15 @@ export default {
       moreText: "More",
       sortBy: ["Newest", "Oldest"],
       sort: "desc",
+      totalAds: null,
       subCatID: this.$route.params.id,
       allRelated: [],
       bearerTokenFromSession: this.$session.get("currentToken"),
       allSingleProducts: [], 
       currentLimit: 5,
       initialLimit: 5,
-      processingList: false
+      processingList: false,
+      product_cat_name: null
     };
   },
   components: {
@@ -169,10 +171,13 @@ export default {
           sort: sort
         })
         .then(result => {
-          that.allSingleProducts = result.data.data;
+          that.allSingleProducts = result.data.data.ads;
+          console.log(that.allSingleProducts);
           that.allRelated = result.data.data.similar_ads;
           that.moreText = "More";
           that.processingList = false;
+          that.product_cat_name = result.data.data.category.product_cat_name;
+          that.totalAds = result.data.data.ads.length;
         });
     }
   },
