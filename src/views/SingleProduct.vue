@@ -265,7 +265,7 @@ export default {
         "device_id": this.deviceID,
         "like": this.like
       }
-      console.log(likeData);
+     
       this.$store.dispatch("products/likeProduct",
         {
           bearerToken: this.$session.get("currentToken"),
@@ -292,7 +292,7 @@ export default {
         })
         .then(result => {
           that.productLikes = result.data.data;
-          console.log(that.productLikes);
+          
         });
     },
     showMerchantPhone() {

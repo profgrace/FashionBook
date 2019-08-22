@@ -23,12 +23,11 @@ export default new Vuex.Store({
   },
 
   state: {
-    $appConfig: process.env.VUE_APP_BASE_URI,
+    $appConfig: "https://api.fashionbook.ng/",//process.env.VUE_APP_BASE_URI,
     states: [],
     lgas: [],
     categories: [],
-    subCategories: [],
-    $basicConfig: "Basic " + process.env.VUE_APP_BASIC_AUTH
+    subCategories: []
   },
   actions: {
     getStates({ commit }) {

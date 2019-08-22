@@ -133,7 +133,7 @@ export default {
         })
         .then(result => {
           that.vendorProducts = result.data.data;
-          console.log(that.vendorProducts);
+          
           that.productsLoaded = true;
         });
     },

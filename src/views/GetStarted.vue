@@ -239,7 +239,7 @@ export default {
                   that.loginText = "Login";
                 }
               } else {
-                console.log(status);
+                
                 if(result.data.error === "invalid_credentials") {
                   /* UI to show data is precessing will be here */
                   this.processingLogin = false;

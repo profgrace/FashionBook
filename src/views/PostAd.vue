@@ -351,7 +351,7 @@ export default {
         };
         
         this.$validator.validateAll(scope).then(result => {
-          console.log(newPostData);
+          
           if (result) {
             this.processingData = true;
             this.postAdButtonText = "Processing...";

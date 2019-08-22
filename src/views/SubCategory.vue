@@ -147,7 +147,7 @@ export default {
       this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, this.sort);
     },
     sortProducts(event) {
-      console.log(event);
+      
       if(event == "Newest") {
         this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, "desc");
         this.sort = "desc";
