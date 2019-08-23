@@ -4,7 +4,7 @@
     <v-layout row wrap mt-5>
       <v-flex xs12 text-xs-center class="pagetitle">
         <div class="title">{{product_cat_name}} - {{totalAds}} ads</div>
-        <p>Some text about the designer bag just to tell a little bit.</p>
+        
       </v-flex>
     </v-layout>
     <v-layout row wrap class="sort">
@@ -35,7 +35,7 @@
                   hide-controls
                 >
                   <v-carousel-item v-for="(item, i) in single.other_images" :key = "i" >
-                    <v-img contain :src="item.path"></v-img>
+                    <v-img class="resized" contain :src="item.path"></v-img>
                   </v-carousel-item>
                 </v-carousel>
               </template>
@@ -186,3 +186,4 @@ export default {
   }
 };
 </script>
+

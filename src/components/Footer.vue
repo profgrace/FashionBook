@@ -16,11 +16,12 @@ export default {
     logoutUser() {
       this.$session.destroy();
       window.location.assign(this.$appHome);
+      //this.$router.push({ path: "/" });
     }
   },
 
   mounted() {
-    console.log(this.$appHome);
+    
     if(this.$session.get("userEmail")) {
       this.logoutText = "Logout"
     }

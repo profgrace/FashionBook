@@ -68,8 +68,9 @@
                 <v-btn color="success" @click="makeCall()">
                   <img src="../assets/icons/whatsapp.png" alt> Talk to Seller
                 </v-btn>
-                <h4></h4>
+                
               </div>
+            
             </v-flex>
             <v-flex xs12 mt-5>
               <div class="title">Ad Details</div>
@@ -182,6 +183,13 @@
               </v-btn>
             </div>
           </v-flex>
+                    <v-flex xs12 class="ads">
+            <v-layout row wrap>
+              <v-flex xs12 ad><img class="resize" src="../assets/logo1.jpg" alt></v-flex>
+              <v-flex xs12 ad><img class="resize" src="../assets/logo2.jpg" alt></v-flex>
+              <v-flex xs12 ad><img class="resize" src="../assets/logo3.jpg" alt></v-flex>
+            </v-layout>
+          </v-flex>
           <v-flex xs12 class="social-feed mt-5">
             <img src="../assets/icons/instagram.svg" alt>
             <span>Our Instagram Page Feed</span>
@@ -190,13 +198,7 @@
             <img src="../assets/icons/facebook.svg" alt>
             <span>Our Facebook Page Feed</span>
           </v-flex>
-          <v-flex xs12 class="ads">
-            <v-layout row wrap>
-              <v-flex xs12 ad>Ad 1</v-flex>
-              <v-flex xs12 ad>Ad 2</v-flex>
-              <v-flex xs12 ad>Ad 3</v-flex>
-            </v-layout>
-          </v-flex>
+
         </v-layout>
       </v-flex>
     </v-layout>
@@ -366,4 +368,8 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.resize {
+  width: 100%;
+  height: 100%;
+}
 </style>

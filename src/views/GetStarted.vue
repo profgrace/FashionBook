@@ -81,8 +81,10 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-center>
+            <v-flex xs12 v-if="updateErrorExist">
+              <p class="errorClass">{{updateErrorText}}</p>
+            </v-flex>
             <v-flex xs12 class="more" my-4>
-              
               <v-btn type="submit" :disabled="processingData || agreeToTerms == false || regEmail == '' || regFirstName == '' || regLastName == '' || regPhoneNumber == '' || regPassword == ''" class="submit" color="btncolor">{{ signUpText }}</v-btn>
             </v-flex>
             <v-flex xs12 class="text-xs-center">
@@ -125,6 +127,9 @@
             </v-flex>
           </v-layout>
           <v-layout row wrap justify-center>
+            <v-flex xs12 v-if="updateErrorExist">
+              <p class="errorClass">{{updateErrorText}}</p>
+            </v-flex>
             <v-flex xs12 class="more" my-4>
               <v-btn type="submit" class="submit" color="btncolor" :disabled="processingLogin || email == '' || password == ''">{{ loginText }}</v-btn>
             </v-flex>
@@ -172,6 +177,8 @@
 export default {
   data() {
     return {
+      updateErrorExist: false,
+      updateErrorText: "",
       actionDialog: false,
       forgot: false,
       agreeToTerms: false,
@@ -198,7 +205,9 @@ export default {
     }
   },
   methods: {
-
+    gotoTerms() {
+      this.$router.push({ path: "/terms" });
+    },
     swapForm() {
       this.login = true;
       this.register = false;
@@ -221,9 +230,11 @@ export default {
         if (result) {
           this.processingLogin = true;
           this.loginText = "Processing...";
+          
           this.$store
             .dispatch("user/login", loginData)
             .then(result => {
+              console.log("result: " + result);
               if (result.status === 200) {
                 if (result.data.error) {
                   /* UI to show data is precessing will be here */
@@ -233,7 +244,7 @@ export default {
                   that.currentToken = "Bearer " + result.data.token;
                   that.$session.set("currentToken", that.currentToken);
                   that.$session.set("userEmail", that.email);
-                  window.location.assign("/vendorprofile");
+                  window.location.assign(that.$appHome + "#/vendorprofile");
                   //that.$router.push({ path: "/vendorprofile" }); // to be changed later
                   that.processingLogin = false;
                   that.loginText = "Login";
@@ -249,15 +260,18 @@ export default {
               } // else part to be included here later when some things are clearer
             })
             .catch(error => {
-              if (error.status > 299) {
-                that.processingLogin = false;
-              }
+              this.updateErrorExist = true;
+              this.updateErrorText = "Unable to login, Please check your password or username";
+              this.processingLogin = false;
+              this.loginText = "Login";
             });
+            
+            
         }
       });
     },
     registerMerchant(scope) {
-      
+      this.updateErrorExist = false;
       const loginData = {
         name: this.regFirstName + " " + this.regLastName,
         email: this.regEmail,
@@ -277,12 +291,6 @@ export default {
             .dispatch("user/registerMerchant", loginData)
             .then(result => {
               if (result.status === 201) {
-                if (result.data.error) {
-                  /* UI to show data is precessing will be here */
-                  that.signUpText = "Sign Up";
-                  that.processingData = false;
-                } else {
-                  
                   that.regEmail = null;
                   that.regFirstName = null;
                   that.regLastName = null;
@@ -293,16 +301,16 @@ export default {
                   
                   that.actionDialog = true;
                   //that.$router.push({ path: "/" }); // to be changed later
-                }
               } else if (result.status === 400) {
                 that.signUpText = "Sign Up";
                 that.processingData = false;
               }
             })
             .catch(error => {
-              if (error.status > 299) {
-                that.processingData = false;
-              }
+              this.updateErrorExist = true;
+              this.updateErrorText = "Unable to complete registration... Email or phone may already exist in our database. Please try again";
+              this.processingData = false;
+              this.signUpText = "Sign Up";
             });
         }
       });
@@ -327,4 +335,18 @@ export default {
   font-weight: 700 !important;
   text-decoration: underline;
 }
+
+.termLink {
+  color: aquamarine;
+  cursor: pointer;
+}
+
+.errorClass {
+    color: red;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    text-align: center;
+  }
+
+
 </style>

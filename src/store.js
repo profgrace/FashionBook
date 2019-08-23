@@ -23,7 +23,7 @@ export default new Vuex.Store({
   },
 
   state: {
-    $appConfig: "http://staging-api.fashionbook.ng/",//process.env.VUE_APP_BASE_URI,
+    $appConfig: process.env.VUE_APP_BASE_URI,
     states: [],
     lgas: [],
     categories: [],
