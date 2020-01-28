@@ -1,2 +1,2 @@
 # FashionBook
-Designs and codes of Fashion Book
+FashionBook Frontend Codes built with Vue
