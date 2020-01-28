@@ -19,6 +19,15 @@ export default {
         },
         {
           src: require("../assets/slider/slider3.jpg")
+        },
+        {
+          src: require("../assets/slider/slider_a.jpg")
+        },
+        {
+          src: require("../assets/slider/slider_b.jpg")
+        },
+        {
+          src: require("../assets/slider/slider_c.jpg")
         }
       ]
     };

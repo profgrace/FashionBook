@@ -9,7 +9,7 @@
           </v-flex>
           <v-flex xs12 md6>
             <v-autocomplete box :items="categories" v-model="selectedCategory"
-              @change="fetchSubCategories(selectedCategory)"
+              @input="fetchSubCategories"
              label="Choose Category"></v-autocomplete>
           </v-flex>
           <v-flex xs12 md6>
@@ -22,6 +22,12 @@
           </v-flex>
           <v-flex xs12 md6>
             <v-textarea box label="Description" v-model="description"></v-textarea>
+          </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field box label="Colour" v-model="colour"></v-text-field>
+          </v-flex>
+          <v-flex xs12 md6>
+            <v-text-field box label="Type" v-model="type"></v-text-field>
           </v-flex>
           <v-flex xs12 md6>
             <v-text-field box label="Price" v-model="price"
@@ -164,17 +170,16 @@
           <v-flex sm6 xs12>
             <v-text-field box label="Business / Personal Name" v-model="businessName"></v-text-field>
           </v-flex>
-          <v-flex sm6 xs12>
-            <v-text-field box label="Phone Number" v-model="phoneNumber"
-            v-mask="['0### ### ####', '0# ### ####']"
-            @keydown.native.space.prevent
+          <v-flex sm6 xs12 v-if="notLoggedIn">
+            <v-text-field box label="Email Address" v-model="e_Mail"
+            :rules="emailRules"
             ></v-text-field>
           </v-flex>
           <v-flex sm6 xs12>
             <v-autocomplete box :items="states" label="State"
             v-model="state"
             :error-messages="errors.collect('state')"
-            @change="fetchLGAs(state)"
+            @input="fetchLGAs"
             data-vv-name="state"
             data-vv-as="State"
             ></v-autocomplete>
@@ -189,10 +194,24 @@
             data-vv-as="LGA"
             ></v-autocomplete>
           </v-flex>
+          <v-flex sm6 xs12>
+            <v-text-field box label="Street Info" v-model="sellerAddress"
+            
+            ></v-text-field>
+          </v-flex>
+          <v-flex sm6 xs12>
+            <v-text-field box label="Phone Number" v-model="phoneNumber"
+            v-mask="['0### ### ####', '0# ### ####']"
+            @keydown.native.space.prevent
+            ></v-text-field>
+          </v-flex>
         </v-layout>
         <v-layout row wrap justify-center>
+          <v-flex xs12 v-if="updateErrorExist">
+            <p class="errorClass">{{updateErrorText}}</p>
+          </v-flex>
           <v-flex xs4 class="more" my-4>
-            <v-btn class="submit" :disabled="processingData" @click="postNewAd('postad')" color="btncolor">{{signUpText}}</v-btn>
+            <v-btn class="submit" @click="postNewAd('postad')" :disabled="processingData" color="btncolor">{{postAdButtonText}}</v-btn>
           </v-flex>
         </v-layout>
       </v-form>
@@ -213,6 +232,7 @@
 <script>
 import { mapState, mapGetters, mapActions } from "vuex";
 import imageCompression from "browser-image-compression";
+import { NO_IMAGE_BASE64_STRING } from '../constants/settings';
 export default {
   data() {
     return {
@@ -222,27 +242,54 @@ export default {
       pic4Url: "",
       pic5Url: "",
       pic6Url: "",
+      e_Mail: this.$session.get("userEmail") || "",
+      notLoggedIn: true,
+      emailRules:[],
+      updateErrorExist: false,
+      otherAdImagesArray: [],
+      image_1: NO_IMAGE_BASE64_STRING,
+      image_2: NO_IMAGE_BASE64_STRING,
+      image_3: NO_IMAGE_BASE64_STRING,
+      image_4: NO_IMAGE_BASE64_STRING,
+      image_5: NO_IMAGE_BASE64_STRING,
+      image_6: NO_IMAGE_BASE64_STRING,
       lga: "",
       state: "",
+      fields_not_filled: true,
       actionDialog: false,
       processingData: false,
-      signUpText: "Post Ad",
+      postAdButtonText: "Post Ad",
       selectedCategory: null,
       selectedSubCategory: null,
-      title: "",
-      description: "",
+      title: null,
+      description: null,
       gender: "N/A",
-      type: "N/A",
-      colour: "N/A",
+      type: null,
+      colour: null,
       price: null,
       phoneNumber: null,
-      contactName: "",
+      contactName: null,
+      updateErrorText: "",
       isNegotiable: false,
-      merchantID: "",
-      sellerAddress: "",
-      businessName: "",
-      actionMsg: ""
+      merchantID: null,
+      sellerAddress: null,
+      businessName: null,
+      actionMsg: null
     };
+  },
+  watch: {
+    e_Mail: function (mail) { // e_Mail is the exact name used in v-model
+        if (mail !== '') {
+            this.emailRules = [ v => (v.match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)) || 'Invalid Email address']
+        } else if (mail === '') {
+            this.emailRules = []
+        }
+    },
+    fields_not_filled: function() {
+      if(pic1Url == '' || contactName == null || phoneNumber == null || price == null || title == null || description == null || sellerAddress == null || businessName == null || selectedCategory == null || selectedSubCategory == null) {
+        return false
+      }
+    }
   },
   created() {
     this.$store.dispatch("getStates");
@@ -257,77 +304,111 @@ export default {
       subCategoryLists: "subCategoryLists"
     })
   },
+  mounted() {
+    if(this.$session.get("userEmail")) {
+      this.notLoggedIn = false;
+    }
+    this.fetchSubCategories(this.selectedCategory);
+    
+  },
   methods: {
     postNewAd(scope) {
+      this.processingData = true;
       let that = this;
-      const reformedState = this.state.split("-");
-      const stateToPost = reformedState[1];
-      const reformedCategory = this.state.split("-");
-      const categoryToPost = reformedCategory[0];
-      let isNegotiableNum = 0;
-      if (this.isNegotiable === true) {
-        isNegotiableNum = 1;
-      }
-      const newPostData = {
-        category_id: categoryToPost,
-        sub_category: this.selectedSubCategory,
-        title: this.title,
-        description: this.description,
-        gender: this.gender,
-        type: this.type,
-        colour: this.colour,
-        price: this.price,
-        phone: this.phoneNumber,
-        contact_name: this.contactName,
-        region: stateToPost,
-        place: this.lga,
-        isnogiatiable: isNegotiableNum,
-        merchant_id: this.merchantID,
-        seller_address: this.sellerAddress,
-        main_image: "", //this.pic1Url,
-        other_image: [
-          {
-            image_1: "" //this.pic2Url
-          },
-          {
-            image_2: ""
-          },
-          {
-            image_3: ""
-          },
-          {
-            image_4: ""
-          }
-        ],
-        business_name: this.businessName
-      };
-      this.$validator.validateAll(scope).then(result => {
-        if (result) {
-          this.processingData = true;
-          this.signUpText = "Processing...";
-          this.$store
-            .dispatch("postad/postFreeAd", newPostData)
-            .then(result => {
-              if (result.status === 200) {
-                if (result.data.error) {
-                  /* UI to show data is precessing will be here */
-                  this.signUpText = "Post Ad";
-                  this.processingData = false;
-                } else {
-                  this.signUpText = "Post Ad";
-                  this.processingData = false;
-                  this.actionMsg = result.data.message;
-                  this.actionDialog = true;
-                }
-              } // else part to be included here later when some things are clearer
-            })
-            .catch(error => {
-              if (error.status > 299) {
-                that.processingData = false;
-              }
-            });
+      if(this.pic1Url == '' || this.phoneNumber == null || this.price == null || this.title == null || this.description == null || this.sellerAddress == null || this.businessName == null || this.selectedCategory == null || this.selectedSubCategory == null ) {
+        this.updateErrorExist = true;
+        this.processingData = false;
+        this.updateErrorText = "Please fill all fields and upload at least one image of your product";
+      } else {
+        this.updateErrorExist = false;
+        const reformedState = this.state.split("-");
+        const stateToPost = reformedState[0];
+        const reformedCategory = this.selectedCategory.split("-");
+        const categoryToPost = reformedCategory[0];
+        let isNegotiableNum = 0;
+        if (this.isNegotiable === true) {
+          isNegotiableNum = 1;
         }
-      });
+        let imagesToPost = [
+            this.image_2,
+            this.image_3,
+            this.image_4,
+            this.image_5,
+            this.image_6
+          ];
+          let trimmedImageList = [];
+        for(let i = 0; i < imagesToPost.length; i++) {
+          if(imagesToPost[i] !== NO_IMAGE_BASE64_STRING ) {
+            trimmedImageList.push[imagesToPost[i]];
+          }
+        }
+        const newPostData = {
+          category_id: parseInt(categoryToPost),
+          sub_category: this.selectedSubCategory,
+          title: this.title,
+          description: this.description,
+          gender: this.gender,
+          type: this.type,
+          colour: this.colour,
+          price: this.price,
+          phone: this.phoneNumber,
+          contact_name: this.businessName,
+          region: parseInt(stateToPost),
+          place: this.lga,
+          isnogiatiable: isNegotiableNum,
+          merchant_id: this.e_Mail,
+          seller_address: this.sellerAddress,
+          main_image: this.image_1,
+          other_image: trimmedImageList,
+          business_name: this.businessName
+        };
+        
+        this.$validator.validateAll(scope).then(result => {
+          
+          if (result) {
+            this.processingData = true;
+            this.postAdButtonText = "Processing...";
+            this.$store
+              .dispatch("postad/postFreeAd", newPostData)
+              .then(result => {
+                if (result.status === 200) {
+                  if (result.data.error) {
+                    this.postAdButtonText = "Post Ad";
+                    this.processingData = false;
+                  } else {
+                    this.postAdButtonText = "Post Ad";
+                    this.processingData = false;
+                    this.actionMsg = result.data.message;
+                    this.actionDialog = true;
+                    that.title = null;
+                    that.description = null;
+                    that.gender = null;
+                    that.type = null;
+                    that.colour = null;
+                    that.price = null;
+                    that.phoneNumber = null;
+                    that.businessName = null;
+                    that.isNegotiable = false;
+                    that.sellerAddress = null;
+                    that.selectedCategory = null;
+                    that.selectedSubCategory = null;
+                    that.businessName = null;
+                    that.state = "";
+                    that.lga = "";
+                    that.postAdButtonText = "Post Ad";
+                    that.processingData = false;
+                  }
+                } // else part to be included here later when some things are clearer
+              })
+              .catch(error => {
+                if (error.status > 299) {
+                  that.processingData = false;
+                }
+              });
+          } 
+        });
+      }
+      
     },
     takePic1() {
       this.$refs.productPic1.click();
@@ -374,16 +455,22 @@ export default {
           fileReader.addEventListener("load", () => {
             if (event.target.id === "image1") {
               __this.pic1Url = fileReader.result;
+              __this.image_1 = __this.pic1Url;
             } else if (event.target.id === "image2") {
               __this.pic2Url = fileReader.result;
+              __this.image_2 = __this.pic2Url;
             } else if (event.target.id === "image3") {
               __this.pic3Url = fileReader.result;
+              __this.image_3 = __this.pic3Url;
             } else if (event.target.id === "image4") {
               __this.pic4Url = fileReader.result;
+              __this.image_4 = __this.pic4Url;
             } else if (event.target.id === "image5") {
               __this.pic5Url = fileReader.result;
+              __this.image_5 = __this.pic5Url;
             } else if (event.target.id === "image6") {
               __this.pic6Url = fileReader.result;
+              __this.image_6 = __this.pic6Url;
             }
           });
           fileReader.readAsDataURL(compressedFile);
@@ -393,13 +480,15 @@ export default {
     fetchStates() {
       this.getStates();
     },
-    fetchLGAs(state) {
+    fetchLGAs(event) {
+      let state = event;
       this.getLGAs({ state });
     },
     fetchCategories() {
       this.getCategories();
     },
-    fetchSubCategories(state) {
+    fetchSubCategories(event) {
+      let state = event;
       this.getSubcategories({ state });
     },
     ...mapActions(["getStates", "getLGAs"]),
@@ -413,6 +502,14 @@ export default {
   font-weight: 200;
   text-align: center;
 }
+
+.errorClass {
+    color: red;
+    font-family: 'Times New Roman', Times, serif;
+    font-style: italic;
+    text-align: center;
+  }
+
 form {
   background-color: white;
   border: 1px solid #adadad;

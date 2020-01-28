@@ -27,9 +27,7 @@ export default new Vuex.Store({
     states: [],
     lgas: [],
     categories: [],
-    subCategories: [],
-    $basicConfig: "Basic " + process.env.VUE_APP_BASIC_AUTH
-    //$bearerConfig: this.$session.get("currentToken")
+    subCategories: []
   },
   actions: {
     getStates({ commit }) {
@@ -58,7 +56,7 @@ export default new Vuex.Store({
           for (let i = 0; i < response.length; i++) {
             lgas.push({
               text: response[i].lga_name,
-              value: response[i].lga_name,
+              value: response[i].lga_id,
               stateid: response[i].state_id
             });
           }
@@ -82,6 +80,7 @@ export default new Vuex.Store({
     },
     getSubcategories({ commit }, { state }) {
       let subCategories = [];
+
       let categoryParts = state.split("-");
       let categoryNumber = categoryParts[0];
       axios

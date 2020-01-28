@@ -13,6 +13,9 @@ import VueSession from "vue-session";
 import IdleVue from "idle-vue";
 // import Toastr
 import VueToastr from "vue-toastr";
+import VuePaginateAl from 'vue-paginate-al';
+ 
+Vue.component('vue-paginate-al', VuePaginateAl)
 
 // Register plugin
 Vue.use(VueToastr, {
@@ -49,6 +52,7 @@ Vue.prototype.$axios = axios;
 // All configurations as strings
 
 Vue.prototype.$appConfig = process.env.VUE_APP_BASE_URI;
+Vue.prototype.$appHome = process.env.VUE_APP_HOME_URI;
 Vue.prototype.$authConfig = {
   withCredentials: false
 };

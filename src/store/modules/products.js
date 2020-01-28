@@ -11,6 +11,39 @@ const actions = {
     return postedAdInfoResponse;
   },
 
+  // get product likes
+  async getProductLikes({ rootState }, { bearerToken, param }) {
+    const productLikesResponse = await api.productLikes(
+      rootState.$appConfig,
+      { bearerToken, param }
+    );
+    return productLikesResponse;
+  },
+
+    // edit product info service
+    async updateProductInfo(
+      { rootState },
+      { bearerToken, param, payload }
+    ) {
+      const updateProductInfoResponse = await api.editProduct(
+        rootState.$appConfig,
+        { bearerToken, param, payload }
+      );
+      return updateProductInfoResponse;
+    },
+
+    // like product
+    async likeProduct(
+      { rootState },
+      { bearerToken, payload }
+    ) {
+      const updateProductInfoResponse = await api.likeAd(
+        rootState.$appConfig,
+        { bearerToken, payload }
+      );
+      return updateProductInfoResponse;
+    },
+  
   //Queue for all products
   async allProductList({ rootState }, { bearerToken, status, limit }) {
     const allProductListResponse = await api.postedProductList(
@@ -18,7 +51,17 @@ const actions = {
       { bearerToken, status, limit }
     );
     return allProductListResponse;
+  },
+
+  //Queue for search products
+  async resultList({ rootState }, { bearerToken, title, page }) {
+    const allProductListResponse = await api.searchProduct(
+      rootState.$appConfig,
+      { bearerToken, title, page }
+    );
+    return allProductListResponse;
   }
+  
 };
 
 export default {

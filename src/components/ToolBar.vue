@@ -4,14 +4,14 @@
       <router-link to="/">FashionBook</router-link>
     </v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-toolbar-items v-if="route == '/'">
+    <v-toolbar-items v-if="loggedIn == false">
       <v-btn flat class="flat-button" to="/getstarted">
         <span>Hey there,</span>
         <i class="ml-1">get started</i>
       </v-btn>
       <v-btn color="secondary" class="secondary-button" to="postad">Post New Ad</v-btn>
     </v-toolbar-items>
-    <v-toolbar-items v-if="route == '/addproducts' || route == '/vendorprofile' || route == '/productlist'">
+    <v-toolbar-items v-if="loggedIn">
       <v-btn flat class="text-none" to="/productlist">Products</v-btn>
       <v-btn flat class="text-none" to="vendorprofile">Profile</v-btn>
     </v-toolbar-items>
@@ -21,8 +21,14 @@
 export default {
   data() {
     return {
-      route: this.$route.path
+      route: this.$route.path,
+      loggedIn: false
     };
+  },
+  mounted() {
+    if(this.$session.get("userEmail")) {
+      this.loggedIn = true
+    }
   }
 };
 </script>

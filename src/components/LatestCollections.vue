@@ -12,7 +12,7 @@
             </router-link>
           </v-flex>
           <v-flex xs3 class="other-pics">
-            <div class="text-xs-center" v-for="(smallitem,i) in item.other_images" :key="i">
+            <div class="text-xs-center" v-for="(smallitem,i) in item.other_images.slice(-3)" :key="i">
               <img :src="smallitem.main_image" alt="Other Product Pictures">
             </div>
           </v-flex>
@@ -25,7 +25,7 @@
             <p>{{item.description}}</p>
           </v-flex>
           <v-flex xs3 class="pt-3 pl-2">
-            <div class="mb-4">{{item.total_item}}</div>
+            <div class="mb-4">{{item.total_item}} item(s)</div>
             <router-link :to="'/subcategory/' + item.product_sub_id" class="link">Check them out</router-link>
           </v-flex>
         </v-layout>
@@ -42,9 +42,9 @@ export default {
     return {
       moreText: "More",
       processingList: false,
-      initialLimit: 2,
+      initialLimit: 10,
       allProducts: [],
-      currentLimit: 2,
+      currentLimit: 10,
       bearerTokenFromSession: this.$session.get("currentToken")
     };
   },

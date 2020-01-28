@@ -3,14 +3,14 @@
     <Search></Search>
     <v-layout row wrap mt-5>
       <v-flex xs12 text-xs-center class="pagetitle">
-        <div class="title">Designer Bag - 100 ads</div>
-        <p>Some text about the designer bag just to tell a little bit.</p>
+        <div class="title">{{product_cat_name}} - {{totalAds}} ads</div>
+        
       </v-flex>
     </v-layout>
     <v-layout row wrap class="sort">
       <v-spacer></v-spacer>
       <v-flex md2 xs6 d-flex>
-        <v-select solo :items="sortBy" v-model="sort" label="Sort By"></v-select>
+        <v-select solo :items="sortBy" @input="sortProducts" v-model="sort" label="Sort By"></v-select>
       </v-flex>
     </v-layout>
     <v-layout row wrap mt-4>
@@ -22,7 +22,7 @@
         </v-layout>
       </v-flex>
       <v-flex pa-2 md10 xs12 class="subcategory">
-        <v-layout row wrap mb-4 class="product" v-for="(single, i) in allSingleProducts.ads" :key="i">
+        <v-layout row wrap mb-4 class="product" v-for="(single, i) in allSingleProducts" :key="i">
           <v-flex md3 xs12 pa-3 class="images">
             <router-link to="/single">
               <template>
@@ -34,7 +34,9 @@
                   class="slider"
                   hide-controls
                 >
-                  <v-carousel-item v-for="(product,i) in single.other_images" :key="i" :src="single.other_images || defaultSlideImages"></v-carousel-item>
+                  <v-carousel-item v-for="(item, i) in single.other_images" :key = "i" >
+                    <v-img class="resized" contain :src="item.path"></v-img>
+                  </v-carousel-item>
                 </v-carousel>
               </template>
               <span>
@@ -69,7 +71,11 @@
               </v-flex>
             </v-layout>
           </v-flex>
+          
         </v-layout>
+        <v-flex xs12 text-xs-center mt-3>
+            <v-btn color="btncolor" :disabled="processingList" @click="loadMore()" class="submit-btn">{{moreText}}</v-btn>
+          </v-flex>
       </v-flex>
     </v-layout>
     <CTA></CTA>
@@ -88,7 +94,7 @@
                 <v-flex xs3>
                   <v-layout row wrap class="others">
                     <v-flex xs12 v-for="(other,i) in product.other_images" :key="i">
-                      <img :src="other" alt>
+                      <img :src="other.path" alt>
                     </v-flex>
                   </v-layout>
                 </v-flex>
@@ -101,7 +107,7 @@
                   <p>{{product.description}}</p>
                 </v-flex>
                 <v-flex xs3 class="link py-5 pa-2">
-                  <span>{{product.length}} items</span>
+                  <router-link :to="'/subcategory/' + product.product_sub_id"><span>{{product.total_image}} items</span></router-link>
                 </v-flex>
               </v-layout>
             </v-flex>
@@ -118,116 +124,18 @@ import CTA from "../components/CallToAction.vue";
 export default {
   data() {
     return {
+      moreText: "More",
       sortBy: ["Newest", "Oldest"],
-      sort: "asc",
+      sort: "desc",
+      totalAds: null,
       subCatID: this.$route.params.id,
       allRelated: [],
-      defaultSlideImages: [
-        require("../assets/products/pic13.jpg"),
-        require("../assets/products/pic14.jpg"),
-        require("../assets/products/pic15.jpg"),
-        require("../assets/products/pic16.jpg")
-      ],
       bearerTokenFromSession: this.$session.get("currentToken"),
-      allSingleProducts: [],
-      singleProducts: [
-        {
-          products: [
-            require("../assets/products/pic13.jpg"),
-            require("../assets/products/pic14.jpg"),
-            require("../assets/products/pic15.jpg"),
-            require("../assets/products/pic16.jpg")
-          ],
-          title: "Ladies' Tote bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Burnt Red",
-          location: "Lagos, Nigeria",
-          price: "N 8,000.00",
-          storeName: "BeautySupplies",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic1.jpg"),
-            require("../assets/products/pic2.jpg"),
-            require("../assets/products/pic3.jpg")
-          ],
-          title: "Brown Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 10,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic19.jpg"),
-            require("../assets/products/pic3.jpg"),
-            require("../assets/products/pic2.jpg")
-          ],
-          title: "Casual Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 5,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        },
-        {
-          products: [
-            require("../assets/products/pic20.jpg"),
-            require("../assets/products/pic1.jpg"),
-            require("../assets/products/pic2.jpg")
-          ],
-          title: "Brown Bag",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag just to tell some more…",
-          color: "Green",
-          location: "Lagos, Nigeria",
-          price: "N 10,000.00",
-          storeName: "DebbieStores",
-          liked: false
-        }
-      ],
-      related: [
-        {
-          mainPic: require("../assets/products/pic1.jpg"),
-          others: [
-            require("../assets/products/pic2.jpg"),
-            require("../assets/products/pic3.jpg"),
-            require("../assets/products/pic1.jpg")
-          ],
-          title: "Designer Bags",
-          description:
-            "Some text about this designer bag just to tell some more. Some text about this designer bag"
-        },
-        {
-          mainPic: require("../assets/products/pic4.jpg"),
-          others: [
-            require("../assets/products/pic5.jpg"),
-            require("../assets/products/pic6.jpg"),
-            require("../assets/products/pic7.jpg")
-          ],
-          title: "Shoes",
-          description:
-            "Some text about this shoes just to tell some more. Some text about this designer bag"
-        },
-        {
-          mainPic: require("../assets/products/pic8.jpg"),
-          others: [
-            require("../assets/products/pic9.jpg"),
-            require("../assets/products/pic10.jpg"),
-            require("../assets/products/pic11.jpg")
-          ],
-          title: "Official Wears",
-          description:
-            "Some text about this official wears just to tell some more. Some text about this designer bag"
-        }
-      ]
+      allSingleProducts: [], 
+      currentLimit: 5,
+      initialLimit: 5,
+      processingList: false,
+      product_cat_name: null
     };
   },
   components: {
@@ -236,6 +144,20 @@ export default {
   },
 
   methods: {
+    loadMore() {
+      this.currentLimit = this.currentLimit + this.initialLimit;
+      this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, this.sort);
+    },
+    sortProducts(event) {
+      
+      if(event == "Newest") {
+        this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, "desc");
+        this.sort = "desc";
+      } else {
+        this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, "asc");
+        this.sort = "asc";
+      }
+    },
     getSubCategoryProducts(status, limit, id, sort) {
       this.processingList = true;
       this.moreText = "Loading...";
@@ -249,14 +171,19 @@ export default {
           sort: sort
         })
         .then(result => {
-          that.allSingleProducts = result.data.data;
+          that.allSingleProducts = result.data.data.ads;
+          console.log(that.allSingleProducts);
           that.allRelated = result.data.data.similar_ads;
-
+          that.moreText = "More";
+          that.processingList = false;
+          that.product_cat_name = result.data.data.category.product_cat_name;
+          that.totalAds = result.data.data.ads.length;
         });
     }
   },
   mounted() {
-    this.getSubCategoryProducts(1, 3, this.subCatID, this.sort);
+    this.getSubCategoryProducts(1, this.currentLimit, this.subCatID, this.sort);
   }
 };
 </script>
+
